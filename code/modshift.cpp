@@ -13,6 +13,7 @@ See https://github.com/JeffLCoughlin/Model-Shift for instructions on how to comp
 #include <fstream>
 #include <algorithm>
 #include <sstream>
+#include <cmath>
 
 // Standard namespace
 using namespace std;
