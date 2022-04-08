@@ -1,5 +1,5 @@
 TESS-ExoClass-FTL was forked from the original TESS-ExoClass github repo. The code has been modified to work with TESS-SPOC FFI transit search results. 
 
-The procedure for running TESS-ExoClass-FTL on NAS machine draco is maintained on google-docs: 
+The procedure for running TESS-ExoClass-FTL on NAS machine draco is maintained on google-docs: https://docs.google.com/document/d/10huEEgbyiii8hlG8bxVOFyZKN0Da6y-qgD-JSp9IGHw/edit?usp=sharing
 
 2022-04-08: Modified TEC for 10 minute FFI use (EM1), and default FTL file prefixes/postfixes 
