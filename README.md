@@ -1,6 +1,5 @@
 # TESS-ExoClass-FTL (TEC-FTL)
 TESS exoplanet detection filter, crossmatch, classifier, and ranker.
-Code from TESS-ExoClass modified to work with TESS-SPOC FFI data products
 
 ### Problem:
 Your transiting planet detection pipeline results in a huge pile of detections.  Now What?  Do I really have to look at all these manually!?
@@ -10,6 +9,8 @@ No!  Algorithmic filtering and classifying is available with TESS-ExoClass (TEC)
 
 ### Authors:
 Christopher J Burke (MIT), Jeffrey Coughlin (SETI/NASA Ames), Susan Mullally (STScI), Aylin Garcia Soto (MIT), Fergal Mullally (SETI), Jessie Christiansen (NExSci)
+
+Code from TESS-ExoClass modified to work with TESS-SPOC FFI data products. Mods by Douglas Caldwell (SETI Inst)
 
 ### Results:
 Sector Number | Detection Source | Result Tables | Summary PDFs
