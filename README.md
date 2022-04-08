@@ -1,5 +1,6 @@
-# TESS-ExoClass (TEC)
+# TESS-ExoClass-FTL (TEC-FTL)
 TESS exoplanet detection filter, crossmatch, classifier, and ranker.
+Code from TESS-ExoClass modified to work with TESS-SPOC FFI data products
 
 ### Problem:
 Your transiting planet detection pipeline results in a huge pile of detections.  Now What?  Do I really have to look at all these manually!?
