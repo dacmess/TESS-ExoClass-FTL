@@ -1,10 +1,11 @@
 #!/bin/bash
 
-DATA_DIR='/pdo/spoc-data/sector-001-046'
+# modify to point to SPOC export directory containing ftl results
+DATA_DIR='/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2522/sector-45'
 
-ls ${DATA_DIR}/dv-reports | head -4
-ls ${DATA_DIR}/dv-reports/*dvm.pdf | head -2
-ls ${DATA_DIR}/light-curve | head -4
-ls ${DATA_DIR}/target-pixel | head -4
-#ls ${DATA_DIR}/mini-reports | head -4
+# print out a selection of export products so user can see filename format
+ls ${DATA_DIR}/ftl-dv-reports | head -4
+ls ${DATA_DIR}/ftl-dv-reports/*dvm.pdf | head -2
+ls ${DATA_DIR}/ftl-light-curve | head -4
+ls ${DATA_DIR}/ftl-target-pixel | head -4
 

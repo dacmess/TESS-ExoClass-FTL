@@ -511,7 +511,7 @@ if __name__ == '__main__':
         if medianInputFlux:
             pngOutputPrefix = os.path.join(make_data_dirs(sesMesDir, SECTOR, curTic), 'tess_{0:016d}_{1:02d}_med'.format(curTic,curPn))
         # Build argument list
-        syscall = '/pdo/users/cjburke/spocvet/sector4/modshift {:s} {:s} {:016d}_{:02d} {:f} {:f} 1'.format(\
+        syscall = '/nobackupp15/spocops/git/tec/modshift {:s} {:s} {:016d}_{:02d} {:f} {:f} 1'.format(\
                             fileOutput, pngOutputPrefix, curTic, curPn, ioblk.bestphysvals[0], ioblk.bestphysvals[1])
         p = Popen(syscall.split(), stdin=None, stdout=PIPE, stderr=PIPE)
         sysreturn, err = p.communicate()
@@ -533,7 +533,7 @@ if __name__ == '__main__':
             #  to get some results
             #  Add tic to bad list
             badTic = np.append(badTic, curTic)
-            syscall = '/pdo/users/cjburke/spocvet/sector4/modshift {:s} {:s} {:016d}_{:02d} {:f} {:f} 1'.format(\
+            syscall = '/nobackupp15/spocops/git/tec/modshift {:s} {:s} {:016d}_{:02d} {:f} {:f} 1'.format(\
                             fileOutput, pngOutputPrefix, curTic, curPn, ioblk.bestphysvals[0]/2.0, ioblk.bestphysvals[1])
             p = Popen(syscall.split(), stdin=None, stdout=PIPE, stderr=PIPE)
             sysreturn, err = p.communicate()
@@ -627,3 +627,4 @@ if __name__ == '__main__':
 
     print('There were {0:d} Bad TICS'.format(len(badTic)))
     print(badTic)
+
