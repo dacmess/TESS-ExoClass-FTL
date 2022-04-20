@@ -1,77 +1,126 @@
 *FTL version - contains mods to work on draco with local SPOC products plus mods to work on FTL*
 # This document describes the procedure for running TEC for a single sector SPOC run.
 
-# A. Environment
+# A. Environment Setup
 Use your normal means of connecting to draco (e.g., vnc) and open terminal windows. Generally, 2 or 3 terminals is sufficient for 
 running things in parallel and keeping track of intermedidiate results.
 *If you are running as SPOCOPS user you will need to login as spocops and do the python setup below on each of these terminals*
 
 > When running as spocops user, change python-conda source path by sourcing 
 > 
->        %> source ~/server-config/bin/conda-for-tec.sh
+>        $ source ~/server-config/bin/conda-for-tec.sh
 >
 >Then select conda environment:
 >
->        %> conda activate tec-env
+>        $ conda activate tec-env
 
 TEC runs with the conda environment **tec-env** tools (with one optional exception).
 
-The following python modules should be available on PDO and are used by TEC numpy, matplotlib, scipy, astropy, h5py, statsmodels, spectrum
+The following python modules used by TEC are available in the tec-env environment: numpy, matplotlib, scipy, astropy, h5py, statsmodels, spectrum
 
-The following system commands should be available on PDO c++ compiler, pdftotext, grep, gs, seq, parallel
-I had to install parallel for the user using the basic local install described in the README file. This installs parallel in ~/bin and documentation & man pages in ~/share/*. Go to Gnu Parallel to get the latest stable version: https://www.gnu.org/software/parallel/.
+The following system commands should be available on you local machine: c++ compiler (g++), pdftotext, grep, gs, seq, parallel
 
-One time you need to compile the modshift test c++ code. After downloading the TEC source code (see below) in the [install-dir]/TESS-ExoClass/code directory
+*Note: on draco, **parallel** was installed for spocops user using the basic local install described in the README file. This installs parallel in ~/bin and documentation & man pages in ~/share/*. Go to Gnu Parallel to get the latest stable version: https://www.gnu.org/software/parallel/.*
 
-A compiled version of modshift is in /nobackupp15/spocops/git/tec/modshift. If you need to recompile use the command line:
+One time you need to compile the modshift test c++ code. After downloading the TEC source code (see below) in the [install-dir]/TESS-ExoClass/code directory.
 
-        g++ -std=c++11 -Wno-unused-result -O3 -o modshift -O modshift.cpp
+A compiled version of modshift is located in /nobackupp15/spocops/git/tec/modshift. If you need to recompile use the command line:
+
+        $ g++ -std=c++11 -Wno-unused-result -O3 -o modshift -O modshift.cpp
 
 In modshift_test.py *near* Line 536 the syscall variable needs to point to the compiled modshift (as described  below in Step 12).
 
 I created git/tec/tec_startup to add the definitions below. Before running tec step 10 you should source this file: 
-$ source tec_startup
-Note: sedcsvfix is used in step 10 to remove commas in the comment section from the TOI csv file. The teccd function is for convenience and not required; it can be used like “teccd 45FTL” for a code directory under the sector45FTL root.
-### TEC
-alias sedcsvfix="sed -e 's/\"\"//g' -e 's/,\"[^\"]*/,\"NOCOMMENT/g'"
-function teccd { cd $NFS/git/tec/sector"$1"/TESS-ExoClass-FTL/code; }
-export -f teccd
-### TEC items
-The alias is used to remove commas in the TEV output TOI listing .csv and the function is used to quickly change to the working code directory of a sector. For instance ‘teccd 48FTL’ will change to where I ran TEC on sector 48. Alter the path for where you are running TEC.
 
-Text in this color is directions for a multi-sector run
-Directory and code setup
-I run TEC under the /pdo/users/cjburke/spocvet, alter the path to your directory of choice
-cd /nobackupp15/spocops/git/tec/ 
-mkdir sector##FTL
-cd sector##FTL
-mkdir S# (mkdir S-1; for multi-sector; do not include the “FTL” in this dir name)
-mkdir pdfs
-mkdir tevpdfs
+        $ source /nobackupp15/spocops/git/tec/tec_startup
+        
+Note: sedcsvfix is used in step 10 to remove commas in the comment section from the TOI csv file. The teccd function is for convenience and not required; it can be used like “teccd 45FTL” for a code directory under the sector45FTL root.
+
+> Contents of tec_startup
+> 
+>        ### TEC
+>        alias sedcsvfix="sed -e 's/\"\"//g' -e 's/,\"[^\"]*/,\"NOCOMMENT/g'"
+>    
+>        function teccd { cd $NFS/git/tec/sector"$1"/TESS-ExoClass-FTL/code; }
+>
+>        export -f teccd
+>    
+>        ### TEC items
+>    
+>The alias is used to remove commas in the TEV output TOI listing .csv and the function is used to quickly change to the working code directory of a sector. For instance ‘teccd 48FTL’ will change to the TEC code route in sector48FTL. Alter the path for where you are running TEC.
+
+
+# B. Directory and code setup
+
+If running as spocops user, run TEC on /nobackupp15/git/tec. Setup the directories for the current run with the commands below, where \## is the sector number for this run:
+
+    $ cd /nobackupp15/spocops/git/tec/ 
+        
+    $ mkdir sector##FTL  
+    
+    $ cd sector##FTL
+    
+    $ mkdir S## (do not include the “FTL” in this dir name)
+    
+    $ mkdir pdfs
+    
+    $ mkdir tevpdfs
+    
 Clone from github the TEC codebase
-git clone https://github.com/dacmess/TESS-ExoClass-FTL.git
-cd TESS-ExoClass-FTL/code
-This is the main working directory for all TEC commands.
-Edit showfilenumbers.sh such that the DATA_DIR variable points to the spoc data directory for the sector you are working on. Note: This is where the DV results, LC & TP files live. On draco this is: /nobackupp15/spocops/exports/science-products-tsop-####        . 
-To edit this file you will need the name of the export directory, including the Sector-NN directory. For example, the changes for Sector 40 FTL look like: 
-DATA_DIR='/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2369/sector-40'
+
+    $ git clone https://github.com/dacmess/TESS-ExoClass-FTL.git
+    
+    $ cd TESS-ExoClass-FTL/code
+    
+This is the main working directory for all TEC commands and all of the subsequent commands are run from within this code directory.
+
+Edit showfilenumbers.sh such that the DATA_DIR variable points to the spoc data directory for the sector you are working on. Note: This is where the DV results, LC & TP files live. On draco this is: /nobackupp15/spocops/exports/science-products-tsop-####. 
+
+To edit this file you will need the name of the export directory, including the Sector-NN directory. For example, the changes for Sector 40 FTL look like:
+
+> DATA_DIR='/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2369/sector-40'
 
 Run the showfilenumbers.sh bash script
-./showfilenumbers.sh
+
+    $ ./showfilenumbers.sh
+    
 It will show the filenames for the current sector. You will need these filename prefixes in the next step.
-Edit update_filenames.sh - There are a series of OLD and NEW variables that need to be updated. This bash script will update all the python codes such that paths and variables get set for the current directory. Copy the NEW variables to the OLD and then replace the NEW variables with values appropriate for the current sector.
-NEW_NAME - the 8 digit number at the end is just the current date in year month day format
-For FTL runs NEW4 should include FTL if you used it in the tec install directory name: e.g., NEW4 = “sector45FTL”
-DV report prefix and LC prefix - just follow the pattern for the filename prefixes from the SPOC data products. Note: this is the part before the zero-padded TIC ID in the export file names. For FTL results, these change to something like “hlsp_tess-spoc_tess_phot_”  and the DV postfix changes to something like “-s0045-s0045_tess_v1” and the LC postfix changes to something like “-s0045_tess_v1” (see outputs from showfilenumbers.sh step above).
-NEW1=”SECTOR = -1”; NEW2=”SECTOR1 = #min”; NEW3=”SECTOR2 = #max”, where #min and #max are the minimum and maximum sector numbers, respectively.
-DV report prefix filenames should be updated to match multi-sector run output; LC prefix filenames should be set to maximum sector number’s light curve files
+
+Edit **update_filenames.sh** - There are a series of OLD and NEW variables that need to be updated. This bash script will update all the python codes such that paths and variables get set for the current directory. Copy the NEW variables to the OLD and then replace the NEW variables with values appropriate for the current sector.
+
+- NEW_NAME - the 8 digit number at the end is just the current date in year month day format
+- For FTL runs NEW4 should include FTL if you used it in the tec install directory name: e.g., NEW4 = “sector45FTL”
+- DV report prefix and LC prefix - follow the pattern for the filename prefixes from the SPOC data products. Note: this is the part before the zero-padded TIC ID in the export file names. For FTL results, these change to something like “hlsp_tess-spoc_tess_phot_”  
+- The DV postfix changes to something like “-s0045-s0045_tess_v1” 
+- The LC postfix changes to something like “-s0045_tess_v1” (see outputs from showfilenumbers.sh step above).
+- NEW1=”SECTOR = -1”; NEW2=”SECTOR1 = #min”; NEW3=”SECTOR2 = #max”, where #min and #max are the minimum and maximum sector numbers, respectively.
+- DV report prefix filenames should be updated to match multi-sector run output; LC prefix filenames should be set to maximum sector number’s light curve files
+
 Run the bash script
-./update_filenames.sh
-Edit the script update_local_paths.sh to change the output path roots from the OLD_PATH to the NEW_PATH (e.g., git repository contains OLD_PATH=”\/pdo\/users\/cjburke\/spocvet” and I’m using NEW_PATH=”\/nobackupp15\/dacaldwe\/git\/tec”). Also, change data path root (e.g. OLD_DATA_PATH=”"\/pdo\/spoc-data", NEW_DATA_PATH= "\/nobackupp15\/spocops\/incoming-outgoing\/exports\/science-products-tsop-2369"). Note: need to escape the directory separators with “\” for use in the sed command.
 
-Then run the bash script ./update_local_paths.s
+    $ ./update_filenames.sh
+    
+Edit the script **update_local_paths.sh** to change the output path roots from the OLD_PATH to the NEW_PATH and the data path roots; e.g.
 
-If running on FTL, run the script: ./update_for_ftl.sh; to change data subdirectory names to “ftl-*”.
+>OLD_PATH=”\\/pdo\\/users\\/cjburke\\/spocvet” 
+>
+>NEW_PATH=”\\/nobackupp15\\/dacaldwe\\/git\\/tec”). 
+>
+>OLD_DATA_PATH="\\/pdo\\/spoc-data", 
+>
+>NEW_DATA_PATH= "\\/nobackupp15\\/spocops\\/incoming-outgoing\\/exports\\/science-products-tsop-####"
+
+*Note: need to escape the directory separators with “\” for use in the sed command. Also update the tsop number to point to the exports for this sector.*
+
+Then run the bash script 
+    
+    $ ./update_local_paths.s
+
+If running on FTL, run the script: 
+
+    $ /nobackupp15/spocops/git/tec/update_for_ftl.sh 
+
+to change data subdirectory names to “ftl-*”.
                           
 
 For TEC there are various times when commands are run in parallel and serially. Thus, I will open 6 ssh connections to pdo to have 6 terminals to run commands. I make use of teccd <sector number> bash alias to quickly go to the TEC working directory for each ssh connection.
