@@ -39,7 +39,7 @@ if __name__ == '__main__':
     fout = open('skyline_data_sector1-46_20220328.txt', 'w')
     # regular sigma criteria
     #BADSIGMA=2.75
-    # long time series sigma
+    # long time series sigma, e.g. for multi-sector
     BADSIGMA=4.0
     
     

@@ -339,6 +339,7 @@ if __name__ == '__main__':
         ioblk.func_showmodel = []
         ioblk.parm.debugLevel = 0
         ioblk.parm.likehoodmoddisplay = 100
+        ioblk.parm.outPrefix = 'sweet'
         ioblk.likecount = 0
 
         # setup some more variables

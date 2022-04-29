@@ -25,6 +25,9 @@ try: # Python 3.x
 except ImportError:  # Python 2.x
     import httplib
 import os
+import astropy.units as u
+from astropy.coordinates import SkyCoord
+
 
 def mastQuery(request):
 
@@ -206,6 +209,13 @@ if __name__ == '__main__':
     alltic = np.array([x.epicId for x in all_tces], dtype=np.int64)
     allpn = np.array([x.planetNum for x in all_tces], dtype=int)
     allatvalid = np.array([x.at_valid for x in all_tces], dtype=int)
+    allra = np.array([x.raDeg for x in all_tces])
+    alldec = np.array([x.decDeg for x in all_tces])
+    allrow = np.array([x.row for x in all_tces])
+    allcol = np.array([x.col for x in all_tces])
+    allcam = np.array([x.camera for x in all_tces])
+    allccd = np.array([x.ccd for x in all_tces])
+    allpixvalid = np.array([x.pixposvalid for x in all_tces])
     allrp = np.array([x.at_rp for x in all_tces])
     allper = np.array([x.at_period for x in all_tces])
     alldur = np.array([x.at_dur for x in all_tces])

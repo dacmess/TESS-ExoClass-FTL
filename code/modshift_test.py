@@ -473,6 +473,7 @@ if __name__ == '__main__':
         ioblk.func_showmodel = []
         ioblk.parm.debugLevel = 0
         ioblk.parm.likehoodmoddisplay = 100
+        ioblk.parm.outPrefix = 'modshift_{0:d}'.format(args.iteration)
         ioblk.likecount = 0
 
 
@@ -496,7 +497,8 @@ if __name__ == '__main__':
         
         # Write out the trapezoid fit data and time series in order to run the
         # modshift
-        fileOutput = os.path.join(make_data_dirs(sesMesDir, SECTOR, curTic), 'tess_trpzdfit_{0:016d}_{1:02d}.txt'.format(curTic,curPn))
+        fileOutput = os.path.join(make_data_dirs(sesMesDir, SECTOR, curTic), 'tess_trpzdfit_{0:016d}_{1:02d}_{2:1d}.txt'.format(curTic,curPn,args.iteration))
+        #fileOutput = os.path.join(make_data_dirs(sesMesDir, SECTOR, curTic), 'tess_trpzdfit_{0:016d}_{1:02d}.txt'.format(curTic,curPn))
         fo = open(fileOutput, 'w')
         # Write out the best fit parameters as a header
         #for j in range(len(ioblk.physvals)): 

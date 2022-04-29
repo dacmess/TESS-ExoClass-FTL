@@ -189,7 +189,7 @@ if __name__ == '__main__':
                 f.close()
                 
                 # Get the modshift trapezoid model fit
-                fileInput = os.path.join(make_data_dirs(sesMesDir, SECTOR, curTic), 'tess_trpzdfit_{0:016d}_{1:02d}.txt'.format(curTic,curPn))
+                fileInput = os.path.join(make_data_dirs(sesMesDir, SECTOR, curTic), 'tess_trpzdfit_{0:016d}_{1:02d}_2.txt'.format(curTic,curPn))
                 dataBlock = np.genfromtxt(fileInput, dtype=['f8','f8','f8'])
                 trpzdModel = dataBlock['f2']
                 
