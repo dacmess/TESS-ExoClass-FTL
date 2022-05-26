@@ -83,16 +83,16 @@ if __name__ == '__main__':
     nWrk = 6
     OVERWRITE = True
     #  Directory storing the ses mes time series
-    sesMesDir = '/pdo/users/cjburke/spocvet/sector1-46'
+    sesMesDir = '/nobackupp15/dacaldwe/git/tec/sector48'
     SECTOR = 6
-    SECTOR1 = 14
-    SECTOR2 = 46
-#    sesMesDir = '/pdo/users/cjburke/spocvet/sector1-2'
+    SECTOR1 = 484
+    SECTOR2 = 48
+#    sesMesDir = '/nobackupp15/dacaldwe/git/tec/sector1-2'
 #    SECTOR=-1
 
     #vetFile = 'spoc_sector1_early_fluxvet_20180904.txt'
-    vetFile = 'spoc_fluxtriage_sector1-46_20220328.txt'
-    tceSeedInFile = 'sector1-46_20220328_tce.pkl'
+    vetFile = 'spoc_fluxtriage_sector48_20220601.txt'
+    tceSeedInFile = 'sector48_20220601_tce.pkl'
 #    vetFile = 'spoc_sector1_2_fluxtriage_20181019.txt'
 #    tceSeedInFile = 'sector1_2_20181019_tce.pkl'
 
@@ -281,7 +281,7 @@ if __name__ == '__main__':
                                                                 useTrpzdModel[useVD]]))
                                         pngOutputPrefix = os.path.join(make_data_dirs(sesMesDir, SECTOR, curTic), 'tess_cnt_modtemp_{0:02d}_{1:02d}_{2:016d}_{3:02d}_{4:02d}'.format(ii,jj, curTic, curPn, k))
                                         # Build argument list
-                                        syscall = '/pdo/users/cjburke/spocvet/modshift/modshift {:s} {:s} {:016d}_{:02d} {:f} {:f} 1'.format(\
+                                        syscall = '/nobackupp15/dacaldwe/git/tec/modshift/modshift {:s} {:s} {:016d}_{:02d} {:f} {:f} 1'.format(\
                                                             fileOutput, pngOutputPrefix, curTic, curPn, allper[i], allatepoch[i])
                                         p = Popen(syscall.split(), stdin=None, stdout=PIPE, stderr=PIPE)
                                         sysreturn, err = p.communicate()

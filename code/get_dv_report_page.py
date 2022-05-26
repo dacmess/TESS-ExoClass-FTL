@@ -28,20 +28,20 @@ def make_data_dirs(prefix, sector, epic):
 
 if __name__ == '__main__':
     # These are for parallel procoessing
-    wID = 2
-    nWrk = 3
+    wID = 0
+    nWrk = 1
     
-    summaryFolder = '/pdo/spoc-data/sector-001-046/dv-reports'
-    summaryPrefix = 'tess2018206190142-'
-    summaryPostfix = '-00555_dvr.pdf'
-    SECTOR1 = 1
-    SECTOR2 = 46
+    summaryFolder = '/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2630/sector-48/ftl-dv-reports'
+    summaryPrefix = 'hlsp_tess-spoc_tess_phot_-'
+    summaryPostfix = '-s0048-s0048_tess_v1_dvr.pdf'
+    SECTOR1 = 48
+    SECTOR2 = 48
     multiRun = False
     if SECTOR2 - SECTOR1 > 0:
         multiRun = True
-    tceSeedInFile = 'sector1-46_20220328_tce.h5'
-    sesMesDir = '/pdo/users/cjburke/spocvet/sector1-46'
-    SECTOR = -1
+    tceSeedInFile = 'sector48_20220601_tce.h5'
+    sesMesDir = '/nobackupp15/dacaldwe/git/tec/sector48'
+    SECTOR = 48
     overwrite = False
     
     # Load the tce data h5
@@ -58,7 +58,7 @@ if __name__ == '__main__':
             curTic = alltic[i]
             print(curTic, i, len(alltic))
             curPN = allpn[i]
-            srchstr = '{0}s{1:04d}-s{2:04d}-{3:016d}{4}'.format(summaryPrefix,SECTOR1,SECTOR2,curTic,'*dvr.pdf')
+            srchstr = '{0}{1:016d}{2}'.format(summaryPrefix,curTic,'*dvr.pdf') 
             dvReportFileList = glob.glob(os.path.join(summaryFolder,srchstr))
             if not len(dvReportFileList)==1:
                 if len(dvReportFileList) == 0:

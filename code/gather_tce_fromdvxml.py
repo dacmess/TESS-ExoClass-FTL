@@ -196,14 +196,14 @@ class tce_seed(object):
         
         
 if __name__ == "__main__":
-    tceSeedOutFile = 'sector1-46_20220328_tce.h5'
-    headXMLPath = '/pdo/spoc-data/sector-001-046/dv-results/'
+    tceSeedOutFile = 'sector48_20220601_tce.h5'
+    headXMLPath = '/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2630/sector-48/ftl-dv-results/'
     # Namespace there is extra junk prepended to tags
     #  This is supposed to make it easier to use 
     ns = {'ns': 'http://www.nasa.gov/2018/TESS/DV'}
     
     # Get list of XML files 
-    fileList = glob.glob(headXMLPath + '*_dvr.xml*')
+    fileList = glob.glob(headXMLPath + '*dvr.xml*')
     # Gather data for each TCE
     all_tces = []
     for i in range(len(fileList)):

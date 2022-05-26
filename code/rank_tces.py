@@ -94,41 +94,41 @@ if __name__ == '__main__':
     wID = int(args.w)
     nWrk = int(args.n)
     
-    summaryFolder = '/pdo/spoc-data/sector-001-046/dv-reports'
-    summaryPrefix = 'tess2018206190142-'
-    summaryPostfix = '-00555_dvs.pdf'
-    SECTOR1 = 1
-    SECTOR2 = 46
+    summaryFolder = '/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2630/sector-48/ftl-dv-reports'
+    summaryPrefix = 'hlsp_tess-spoc_tess_phot_-'
+    summaryPostfix = '_tess_v1_dvs-'
+    SECTOR1 = 48
+    SECTOR2 = 48
     multiRun = False
     if SECTOR2 - SECTOR1 > 0:
         multiRun = True
 
     doPNGs = False
-    pngFolder = '/pdo/users/cjburke/spocvet/sector1-46/pngs/'
+    pngFolder = '/nobackupp15/dacaldwe/git/tec/sector48/pngs/'
     doMergeSum = True
     if nWrk == 1:
         doMergeSum = False
-    pdfFolder = '/pdo/users/cjburke/spocvet/sector1-46/pdfs/'
-    SECTOR1 = 1
-    SECTOR2 = 46
-    sesMesDir = '/pdo/users/cjburke/spocvet/sector1-46'
-    SECTOR = -1# -1 for multi-sector
+    pdfFolder = '/nobackupp15/dacaldwe/git/tec/sector48/pdfs/'
+    SECTOR1 = 48
+    SECTOR2 = 48
+    sesMesDir = '/nobackupp15/dacaldwe/git/tec/sector48'
+    SECTOR = 48# -1 for multi-sector
 
-    fileOut1 = 'spoc_ranking_Tier1_sector1-46_20220328.txt'
-    fileOut2 = 'spoc_ranking_Tier2_sector1-46_20220328.txt'
-    fileOut3 = 'spoc_ranking_Tier3_sector1-46_20220328.txt'
-    vetFile = 'spoc_fluxtriage_sector1-46_20220328.txt'
-    tceSeedInFile = 'sector1-46_20220328_tce.h5'
-    modshiftFile = 'spoc_modshift_sector1-46_20220328.txt'
-    modshiftFile2 = 'spoc_modshift_med_sector1-46_20220328.txt'
-    sweetFile = 'spoc_sweet_sector1-46_20220328.txt'
-    toiFederateFile = 'federate_toiWtce_sector1-46_20220328.txt'
-    knowPFederateFile = 'federate_knownP_sector1-46_20220328.txt'
-    selfMatchFile = 'selfMatch_sector1-46_20220328.txt'
-    modumpFile = 'spoc_modump_sector1-46_20220328.txt'
+    fileOut1 = 'spoc_ranking_Tier1_sector48_20220601.txt'
+    fileOut2 = 'spoc_ranking_Tier2_sector48_20220601.txt'
+    fileOut3 = 'spoc_ranking_Tier3_sector48_20220601.txt'
+    vetFile = 'spoc_fluxtriage_sector48_20220601.txt'
+    tceSeedInFile = 'sector48_20220601_tce.h5'
+    modshiftFile = 'spoc_modshift_sector48_20220601.txt'
+    modshiftFile2 = 'spoc_modshift_med_sector48_20220601.txt'
+    sweetFile = 'spoc_sweet_sector48_20220601.txt'
+    toiFederateFile = 'federate_toiWtce_sector48_20220601.txt'
+    knowPFederateFile = 'federate_knownP_sector48_20220601.txt'
+    selfMatchFile = 'selfMatch_sector48_20220601.txt'
+    modumpFile = 'spoc_modump_sector48_20220601.txt'
 
     # Load the tce data h5
-    tceSeedInFile = 'sector1-46_20220328_tce.h5'
+    tceSeedInFile = 'sector48_20220601_tce.h5'
     tcedata = tce_seed()
     all_tces = tcedata.fill_objlist_from_hd5f(tceSeedInFile)
     
@@ -549,7 +549,7 @@ if __name__ == '__main__':
                     fout3.write('{} {} {}\n'.format(curstr[0:-1],hasSec,sweetFail))
                 reportIt = True
             if doPNGs and reportIt:
-                inputFile = os.path.join(summaryFolder,'{0}s{1:04d}-s{2:04d}-{3:016d}-{4:02d}{5}'.format(summaryPrefix,SECTOR1,SECTOR2,alltic[j],allpn[j],summaryPostfix))
+                inputFile = os.path.join(summaryFolder,'{0}{1:016d}-s{2:04d}-s{3:04d}{4}{5:02d}.pdf'.format(summaryPrefix,alltic[j],SECTOR1,SECTOR2,summaryPostfix,allpn[j]))
                 outputFile = os.path.join(pngFolder,'{0:04d}-{1:016d}-{2:02d}.png'.format(i, alltic[j], allpn[j]))
                 comstring = 'gs -dBATCH -dNOPAuSE -sDEVICE=png16m -r300 -o {0} {1}'.format(outputFile, inputFile)
                 tmp = call(comstring, shell=True)
@@ -574,7 +574,7 @@ if __name__ == '__main__':
                 mrkOut.write('} if true}{pop false} ifelse} >> setpagedevice\n')
                 mrkOut.close()
                 
-                inputFile1 = os.path.join(summaryFolder,'{0}s{1:04d}-s{2:04d}-{3:016d}-{4:02d}*dvs.pdf'.format(summaryPrefix,SECTOR1,SECTOR2,alltic[j],allpn[j],summaryPostfix))
+                inputFile1 = os.path.join(summaryFolder,'{0}{1:016d}-s{2:04d}-s{3:04d}{4}{5:02d}.pdf'.format(summaryPrefix,alltic[j],SECTOR1,SECTOR2,summaryPostfix,allpn[j]))
                 inputFileList = glob.glob(inputFile1)
                 if not len(inputFileList) == 1:
                     print('Error: not found or multiple DV summaries found for {0:d} pn {1:d}'.format(alltic[j], allpn[j]))

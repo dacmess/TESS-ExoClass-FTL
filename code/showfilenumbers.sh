@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # modify to point to SPOC export directory containing ftl results
-DATA_DIR='/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2522/sector-45'
+DATA_DIR='/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2630/sector-48'
 
 # print out a selection of export products so user can see filename format
 ls ${DATA_DIR}/ftl-dv-reports | head -4

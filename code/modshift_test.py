@@ -292,20 +292,20 @@ if __name__ == '__main__':
     if args.iteration == 1:
         print('Running Modshift on DV Median detrended light curves')
         medianInputFlux = True
-        fileOut = 'spoc_modshift_med_sector1-46_20220328.txt'
+        fileOut = 'spoc_modshift_med_sector48_20220601.txt'
     elif args.iteration == 2:
         print('Running Modshift on Altername detrended light curves')
         medianInputFlux = False
-        fileOut = 'spoc_modshift_sector1-46_20220328.txt'
+        fileOut = 'spoc_modshift_sector48_20220601.txt'
     else:
         print('First Argument must be 1 or 2')
         sys.exit(1)
     #  Directory storing the ses mes time series
-    sesMesDir = '/pdo/users/cjburke/spocvet/sector1-46'
-    SECTOR = -1
+    sesMesDir = '/nobackupp15/dacaldwe/git/tec/sector48'
+    SECTOR = 48
     OVERWRITE = False
     doPNGs = True
-#    pngFolder = '/pdo/users/cjburke/spocvet/sector2/pngs'
+#    pngFolder = '/nobackupp15/dacaldwe/git/tec/sector2/pngs'
     # Debugging fileout
     #fileOut = 'junk.txt'
     rerun = False    
@@ -322,14 +322,14 @@ if __name__ == '__main__':
         rerun = True
     else:
         fom = open(fileOut, 'w')
-    vetFile = 'spoc_fluxtriage_sector1-46_20220328.txt'
+    vetFile = 'spoc_fluxtriage_sector48_20220601.txt'
     #vetFile = 'junk.txt'
-    tceSeedInFile = 'sector1-46_20220328_tce.h5'
+    tceSeedInFile = 'sector48_20220601_tce.h5'
     
     badTic = np.array([], dtype=np.int64);
 
     # Load the tce data h5
-    tceSeedInFile = 'sector1-46_20220328_tce.h5'
+    tceSeedInFile = 'sector48_20220601_tce.h5'
     tcedata = tce_seed()
     all_tces = tcedata.fill_objlist_from_hd5f(tceSeedInFile)
     
