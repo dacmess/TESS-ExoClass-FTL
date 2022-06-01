@@ -208,7 +208,8 @@ def pgmcmc_iterate_proposals(ioblk):
                 ioblk.parm.maxPropTries)
         input("Please Ctrl-C to exit")
     
-    pgmcmc_save_state(ioblk,'ioblk_props')
+    pgmcmc_save_state(ioblk,'props')
+    #pgmcmc_save_state(ioblk,'ioblk_props')
     
     return ioblk
 
@@ -320,6 +321,7 @@ def pgmcmc_run_mcmc(ioblk, postPropStart=False):
         print("Done with Proposal Iterations")
     else:
         # Load a set of proposal steps from a previous run
+	### DAC: should the next line load state 'props' (see Line 211)
         previoblk = pgmcmc_load_state('ioblk_props')
         if ioblk.parm.debugLevel > 2:
             fh = ioblk.fighandle
