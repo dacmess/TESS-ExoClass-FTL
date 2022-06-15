@@ -18,6 +18,7 @@ from gather_tce_fromdvxml import tce_seed
 import matplotlib.pyplot as plt
 from statsmodels import robust
 import os
+import tec_run_parameters as tecrp
 
 
 def genericFed(per, epc, tryper, tryepc, trydur, trypn, trytic, tStart, tEnd):
@@ -36,15 +37,23 @@ def genericFed(per, epc, tryper, tryepc, trydur, trypn, trytic, tStart, tEnd):
 
 
 if __name__ == '__main__':
-    fout = open('skyline_data_sector48_20220601.txt', 'w')
-    # regular sigma criteria
-    #BADSIGMA=2.75
-    # long time series sigma, e.g. for multi-sector
-    BADSIGMA=4.0
+
+    # get run parameters
+    run_name            = tecrp.run_name
+    multi_sector_flag	= tecrp.multi_sector_flag
+
+    fout = open('skyline_data_' + run_name + '.txt', 'w')
+    
+    if multi_sector_flag:
+        # long time series sigma, e.g. for multi-sector
+        BADSIGMA=4.0
+    else:
+        # regular sigma criteria
+        BADSIGMA=2.75
     
     
     # Load the tce data h5
-    tceSeedInFile = 'sector48_20220601_tce.h5'
+    tceSeedInFile = run_name + '_tce.h5'
     tcedata = tce_seed()
     all_tces = tcedata.fill_objlist_from_hd5f(tceSeedInFile)
     

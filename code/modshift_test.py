@@ -31,6 +31,8 @@ from pgmcmc import pgmcmc_run_mcmc, pgmcmc_run_minimizer
 import matplotlib.pyplot as plt
 import argparse
 import sys
+import tec_run_parameters as tecrp
+
 
 def make_data_dirs(prefix, sector, epic):
     secDir = 'S{0:02d}'.format(sector)
@@ -284,6 +286,13 @@ def pgmcmc_prior(ioblk):
 
 
 if __name__ == '__main__':
+
+    # get run parameters
+    run_name            = tecrp.run_name
+    sector_number	= tecrp.sector_number
+    tec_root		= tecrp.tec_root
+    tec_run_name	= tecrp.tec_run_name
+
     parser = argparse.ArgumentParser()
     parser.add_argument("iteration", type=int,\
                     default = 1, choices=[1,2], \
@@ -292,19 +301,21 @@ if __name__ == '__main__':
     if args.iteration == 1:
         print('Running Modshift on DV Median detrended light curves')
         medianInputFlux = True
-        fileOut = 'spoc_modshift_med_sector48_20220601.txt'
+        fileOut = 'spoc_modshift_med_' + run_name + '.txt'
     elif args.iteration == 2:
         print('Running Modshift on Altername detrended light curves')
         medianInputFlux = False
-        fileOut = 'spoc_modshift_sector48_20220601.txt'
+        fileOut = 'spoc_modshift_' + run_name + '.txt'
     else:
         print('First Argument must be 1 or 2')
         sys.exit(1)
+
     #  Directory storing the ses mes time series
-    sesMesDir = '/nobackupp15/dacaldwe/git/tec/sector48'
-    SECTOR = 48
+    sesMesDir = tec_root + tec_run_name
+    SECTOR = sector_number
     OVERWRITE = False
     doPNGs = True
+#    pngFolder = tec_root + tec_run_name + '/pngs'
 #    pngFolder = '/nobackupp15/dacaldwe/git/tec/sector2/pngs'
     # Debugging fileout
     #fileOut = 'junk.txt'
@@ -322,14 +333,14 @@ if __name__ == '__main__':
         rerun = True
     else:
         fom = open(fileOut, 'w')
-    vetFile = 'spoc_fluxtriage_sector48_20220601.txt'
+
+    vetFile = 'spoc_fluxtriage_' + run_name + '.txt'
     #vetFile = 'junk.txt'
-    tceSeedInFile = 'sector48_20220601_tce.h5'
     
     badTic = np.array([], dtype=np.int64);
 
     # Load the tce data h5
-    tceSeedInFile = 'sector48_20220601_tce.h5'
+    tceSeedInFile = run_name + '_tce.h5'
     tcedata = tce_seed()
     all_tces = tcedata.fill_objlist_from_hd5f(tceSeedInFile)
     
@@ -513,7 +524,8 @@ if __name__ == '__main__':
         if medianInputFlux:
             pngOutputPrefix = os.path.join(make_data_dirs(sesMesDir, SECTOR, curTic), 'tess_{0:016d}_{1:02d}_med'.format(curTic,curPn))
         # Build argument list
-        syscall = '/nobackupp15/spocops/git/tec/modshift {:s} {:s} {:016d}_{:02d} {:f} {:f} 1'.format(\
+	# assumes compiled modshift program is in the tec_root directory
+        syscall = tec_root + 'modshift {:s} {:s} {:016d}_{:02d} {:f} {:f} 1'.format(\
                             fileOutput, pngOutputPrefix, curTic, curPn, ioblk.bestphysvals[0], ioblk.bestphysvals[1])
         p = Popen(syscall.split(), stdin=None, stdout=PIPE, stderr=PIPE)
         sysreturn, err = p.communicate()
@@ -535,7 +547,7 @@ if __name__ == '__main__':
             #  to get some results
             #  Add tic to bad list
             badTic = np.append(badTic, curTic)
-            syscall = '/nobackupp15/spocops/git/tec/modshift {:s} {:s} {:016d}_{:02d} {:f} {:f} 1'.format(\
+            syscall = tec_root + 'modshift {:s} {:s} {:016d}_{:02d} {:f} {:f} 1'.format(\
                             fileOutput, pngOutputPrefix, curTic, curPn, ioblk.bestphysvals[0]/2.0, ioblk.bestphysvals[1])
             p = Popen(syscall.split(), stdin=None, stdout=PIPE, stderr=PIPE)
             sysreturn, err = p.communicate()

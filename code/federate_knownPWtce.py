@@ -33,6 +33,7 @@ import urllib
 #import urllib2
 import os
 import ssl
+import tec_run_parameters as tecrp
 
 def mastQuery(request):
 
@@ -127,8 +128,19 @@ def coughlin_sigmap(p1,p2):
 
 
 if __name__ == '__main__':
-    fout = open('federate_knownP_sector48_20220601.txt', 'w')
-    dataSpan = 27.0
+
+    # get run parameters
+    run_name            = tecrp.run_name
+    multi_sector_flag	= tecrp.multi_sector_flag
+    data_root_dir       = tecrp.data_root_dir
+    dv_results_dir      = tecrp.dv_results_dir
+
+    fout = open('federate_knownP_' + run_name + '.txt', 'w')
+    if mult_sector_flag:
+        dataSpan = 27.0  # adjust this as needed; used for defining range of ok epochs
+    else:
+        dataSpan = 27.0
+
     wideSearch = True
     searchRad = 180.0 # Arcsecond search radius for other TICs
     # Check to see if cadence to time mappting is available
@@ -174,9 +186,13 @@ if __name__ == '__main__':
     gtTIC = np.arange(len(gtName))
     gtTOI = np.arange(len(gtName))
     
+    # General pointing; is this too slow?
+    idx = np.where(gtEclipLat > -90.0)
     # Filter for planets in the correct ecliptic area to speed this up
     # Ecliptic pointing
-    idx = np.where((gtEclipLat > -20.0) & (gtEclipLat < 20.0))[0]
+    #idx = np.where((gtEclipLat > -20.0) & (gtEclipLat < 20.0))[0]
+    # South Ecliptic pointing
+    #idx = np.where((gtEclipLat < -3.0))[0]
     # North Ecliptic pointing
     #idx = np.where((gtEclipLat > 3.0))[0]
     gtName = gtName[idx]
@@ -236,7 +252,7 @@ if __name__ == '__main__':
 
 
     # Load the tce data h5
-    tceSeedInFile = 'sector48_20220601_tce.h5'
+    tceSeedInFile = run_name + '_tce.h5'
     tcedata = tce_seed()
     all_tces = tcedata.fill_objlist_from_hd5f(tceSeedInFile)
     

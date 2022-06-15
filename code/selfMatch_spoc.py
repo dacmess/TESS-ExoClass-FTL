@@ -29,6 +29,8 @@ except ImportError:  # Python 2.x
 from astropy import units as u
 from astropy.coordinates import SkyCoord
 import os
+import tec_run_parameters as tecrp
+
 
 def mastQuery(request):
 
@@ -135,10 +137,20 @@ def genericFed(per, epc, tryper, tryepc, trydur, trypn, trytic, tStart, tEnd):
 
 
 if __name__ == '__main__':
-    fout = open('selfMatch_sector48_20220601.txt', 'w')
-    dataSpan = 27.0
+
+    # get run parameters
+    run_name            = tecrp.run_name
+    multi_sector_flag   = tecrp.multi_sector_flag
+
+    fout = open('selfMatch_' + run_name + '.txt', 'w')
+
+    if mult_sector_flag:
+        dataSpan = 27.0  # adjust this as needed; used for defining range of ok epochs
+    else:
+        dataSpan = 27.0
+
     # Load the tce data h5
-    tceSeedInFile = 'sector48_20220601_tce.h5'
+    tceSeedInFile = run_name + '_tce.h5'
     tcedata = tce_seed()
     all_tces = tcedata.fill_objlist_from_hd5f(tceSeedInFile)
     # Check to see if cadence to time mappting is available

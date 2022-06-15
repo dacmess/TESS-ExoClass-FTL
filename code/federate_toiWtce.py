@@ -27,6 +27,7 @@ except ImportError:  # Python 2.x
 import os
 import astropy.units as u
 from astropy.coordinates import SkyCoord
+import tec_run_parameters as tecrp
 
 
 def mastQuery(request):
@@ -134,8 +135,17 @@ def query_othertics(ticWant, searchRad):
 
 
 if __name__ == '__main__':
-    fout = open('federate_toiWtce_sector48_20220601.txt', 'w')
-    dataSpan = 27.0
+
+    # get run parameters
+    run_name            = tecrp.run_name
+    run_date		= tecrp.run_date
+    multi_sector_flag   = tecrp.multi_sector_flag
+
+    fout = open('federate_toiWtce_' + run_name + '.txt', 'w')
+    if mult_sector_flag:
+        dataSpan = 27.0  # adjust this as needed; used for defining range of ok epochs
+    else:
+        dataSpan = 27.0
 
     wideSearch = True # Do MASTTIC query if true to search
                         # for nearby matches in case the
@@ -174,7 +184,10 @@ if __name__ == '__main__':
     # To fix string before reading in
     # As of Oct. 2019 I needed to use this to fix commas in strings
     # sed -e 's/""//g' -e 's/,"[^"]*/,"NOCOMMENT/g' csv-file-2019-10-29.csv > toi-plus-2019-10-29-fixed.csv
-    qlpfile = 'csv-file-toi-catalog-FIXED-20220601.csv'
+    
+    # Assumes the TOI catalog filename is like: csv-file-toi-catalog-FIXED-20220601.csv
+    qlpfile = 'csv-file-toi-catalog-FIXED-' + run_date + '.csv'
+    #qlpfile = 'csv-file-toi-catalog-FIXED-20220601.csv'
     dtypeseq = ['U20','U20','i4','f8','U2']
     dtypeseq.extend(['f8']*14)
     dtypeseq.extend(['U20','U80'])
@@ -202,7 +215,7 @@ if __name__ == '__main__':
 #                                gtTOI, gtDisp, gtPer, gtEpc, gtDur)
 
     # Load the tce data h5
-    tceSeedInFile = 'sector48_20220601_tce.h5'
+    tceSeedInFile = run_name + '_tce.h5'
     tcedata = tce_seed()
     all_tces = tcedata.fill_objlist_from_hd5f(tceSeedInFile)
     

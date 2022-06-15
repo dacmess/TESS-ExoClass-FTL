@@ -17,13 +17,17 @@ here and the CHASES test.
 
 import numpy as np
 from gather_tce_fromdvxml import tce_seed
-
+import tec_run_parameters as tecrp
 
 if __name__ == "__main__":
+
+    # get run parameters
+    run_name            = tecrp.run_name
+
     # Load the h5 file that contains TCE seed information
     # The h5 file is created by gather_tce_fromdvxml.py
-    tceSeedInFile = 'sector48_20220601_tce.h5'
-    outFile = 'sector48_20220601_tce.txt'
+    tceSeedInFile = run_name + '_tce.h5'
+    outFile = run_name + '_tce.txt'
     delim = ' | '
     tcedata = tce_seed()
     all_tces = tcedata.fill_objlist_from_hd5f(tceSeedInFile)

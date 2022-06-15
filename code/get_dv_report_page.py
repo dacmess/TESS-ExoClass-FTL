@@ -12,6 +12,8 @@ import os
 from subprocess import Popen, PIPE
 import math
 import glob
+import tec_run_parameters as tecrp
+
 
 def make_data_dirs(prefix, sector, epic):
     secDir = 'S{0:02d}'.format(sector)
@@ -31,20 +33,35 @@ if __name__ == '__main__':
     wID = 0
     nWrk = 1
     
-    summaryFolder = '/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2630/sector-48/ftl-dv-reports'
-    summaryPrefix = 'hlsp_tess-spoc_tess_phot_-'
-    summaryPostfix = '-s0048-s0048_tess_v1_dvr.pdf'
-    SECTOR1 = 48
-    SECTOR2 = 48
-    multiRun = False
-    if SECTOR2 - SECTOR1 > 0:
-        multiRun = True
-    tceSeedInFile = 'sector48_20220601_tce.h5'
-    sesMesDir = '/nobackupp15/dacaldwe/git/tec/sector48'
-    SECTOR = 48
+    # get run parameters
+    run_name            = tecrp.run_name
+    multi_sector_flag   = tecrp.multi_sector_flag
+    sector_number	= tecrp.sector_number
+    start_sector	= tecrp.start_sector
+    end_sector		= tecrp.end_sector
+    tec_root		= tecrp.tec_root
+    tec_run_name	= tecrp.tec_run_name
+    data_root_dir       = tecrp.data_root_dir
+    dv_reports_dir      = tecrp.dv_reports_dir
+    dv_file_prefix	= tecrp.dv_file_prefix
+    dv_file_postfix	= tecrp.dv_file_postfix
+
+    summaryFolder = data_root_dir + dv_reports_dir
+    #summaryFolder = '/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2630/sector-48/ftl-dv-reports'
+    summaryPrefix = dv_file_prefix
+    summaryPostfix = dv_file_postfix  # not currently used
+    #summaryPostfix = '-s0048-s0048_tess_v1_dvr.pdf'
+    SECTOR1 = start_sector
+    SECTOR2 = end_sector
+    multiRun = multi_sector_flag
+
+    sesMesDir = tec_root + tec_run_name
+    #sesMesDir = '/nobackupp15/dacaldwe/git/tec/sector48'
+    SECTOR = sector_number
     overwrite = False
     
     # Load the tce data h5
+    tceSeedInFile = run_name + '_tce.h5'
     tcedata = tce_seed()
     all_tces = tcedata.fill_objlist_from_hd5f(tceSeedInFile)    
 

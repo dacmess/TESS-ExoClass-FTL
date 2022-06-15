@@ -133,7 +133,7 @@ TEC commands are run from the TESS-ExoClass/code directory for the sector you ar
 0.  Run in conda python 3.x environment: conda activate tec-env (had to install several packages & ran into some dependency issues, but fixed after uninstall then conda install)
 
 1. Read in the DV xml files for the SPOC TCEs and store the TCE data in a convenient format. Prereq: None. Wait until finished. Output: sector33_20200208_tce.h5 (can check # of TCEs is as expected by checking DAWG ticket)
-python  gather_tce_fromdvxml.py Note: for FTL need to change “*_dvr.xml*” to “*-dv.xml*” since the FLT DV xml filenames differ. I guess we could use *dvr.xml*  that would work for both and (I don’t think) cause any problems.
+python  gather_tce_fromdvxml.py Note: for FTL need to change “*_dvr.xml*” to “*-dvr.xml*” since the FLT DV xml filenames differ. I guess we could use *dvr.xml*  that would work for both and (I don’t think) cause any problems.
 
 2. Output the TCE data in a human friendly .txt file. Prereq: Step 1. Wait until finished. Output: sector33_20200208_tce.txt
 python dump_tce_info.py

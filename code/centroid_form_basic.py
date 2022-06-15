@@ -22,6 +22,8 @@ import glob
 import cjb_utils as cjb
 import statsmodels.robust as sm
 import argparse
+import tec_run_parameters as tecrp
+
 
 def idx_filter(idx, *array_list):
     new_array_list = []
@@ -97,31 +99,35 @@ if __name__ == '__main__':
     wID = int(args.w)
     nWrk = int(args.n)
 
+    # get run parameters
+    run_name            = tecrp.run_name
+    sector_number       = tecrp.sector_number
+    start_sector        = tecrp.start_sector
+    end_sector          = tecrp.end_sector
+    tec_root            = tecrp.tec_root
+    tec_run_name        = tecrp.tec_run_name
+    cadPerHr		= tecrp.cadPerHr
+
     OVERWRITE = False
     #  Directory storing the ses mes time series
-    sesMesDir = '/nobackupp15/dacaldwe/git/tec/sector48'
-    SECTOR = 48
-    SECTOR1 = 48
-    SECTOR2 = 48
-#    sesMesDir = '/nobackupp15/dacaldwe/git/tec/sector1-2'
+    sesMesDir = tec_root + tec_run_name
+    SECTOR = sector_number
+    SECTOR1 = start_sector
+    SECTOR2 = end_sector
 #    SECTOR=-1
 
-    #vetFile = 'spoc_sector1_early_fluxvet_20180904.txt'
-    vetFile = 'spoc_fluxtriage_sector48_20220601.txt'
-    tceSeedInFile = 'sector48_20220601_tce.h5'
+    vetFile = 'spoc_fluxtriage_' + run_name + '.txt'
 #    vetFile = 'spoc_sector1_2_fluxtriage_20181019.txt'
-#    tceSeedInFile = 'sector1_2_20181019_tce.pkl'
 
     # Max number cadences closest to midtransit to go into  median depth estiamte
-    MEDDEPN = 15
+    MEDDEPN = 15  # not used -DAC
     # Search and filter parameters
-    cadPerHr = 6
     firstFilterScaleFac = 10 # low frequency median filter will be
                             # firstFilterScaleFac*searchDurationHours medfilt window
 
 
     # Load the tce data h5
-    tceSeedInFile = 'sector48_20220601_tce.h5'
+    tceSeedInFile = run_name + '_tce.h5'
     tcedata = tce_seed()
     all_tces = tcedata.fill_objlist_from_hd5f(tceSeedInFile)
     

@@ -15,6 +15,8 @@ import pickle
 import math
 from gather_tce_fromdvxml import tce_seed
 import scipy.special as spec
+import tec_run_parameters as tecrp
+
 
 def coughlin_sigmap(p1,p2):
     up1 = p1
@@ -37,15 +39,15 @@ def get_useable_ephems(all_tces):
     for i,td in enumerate(all_tces):
         allepics[i] = td.epicId
         allpns[i] = td.planetNum
-        if td.at_valid == 1:
+        if td.at_valid == 1:		# all transit fit valid
             allper[i] = td.at_period
             allepoch[i] = td.at_epochbtjd
             allduration[i] = td.at_dur
-        elif td.trp_valid ==1:
+        elif td.trp_valid ==1:		# trapazoidal fit valid
             allper[i] = td.tce_period
             allepoch[i] = td.trp_epochbtjd
             allduration[i] = td.trp_dur
-        else:
+        else:				# use TCE parameters
             allper[i] = td.tce_period
             allepoch[i] = td.tce_epoch
             allduration[i] = td.pulsedur
@@ -53,15 +55,23 @@ def get_useable_ephems(all_tces):
 
 if __name__ == '__main__':
     
+    # get run parameters
+    run_name            = tecrp.run_name
+    multi_sector_flag   = tecrp.multi_sector_flag
+    sector_number	= tecrp.sector_number
+    tec_root		= tecrp.tec_root
+    tec_run_name	= tecrp.tec_run_name
+    data_root_dir       = tecrp.data_root_dir
+    dv_results_dir      = tecrp.dv_results_dir
+
     # Load the h5 file that contains TCE seed information
     # The h5 file is created by gather_tce_fromdvxml.py
-    tceSeedInFile = 'sector48_20220601_tce.h5'
+    tceSeedInFile = run_name + '_tce.h5'
 
     #  Directory storing the ses mes data
-    sesDataDir = '/nobackupp15/dacaldwe/git/tec/sector48'
-    SECTOR = 48
-    fluxVetOut = 'spoc_fluxtriage_sector48_20220601.txt'
-#    fluxVetOut = 'junk.txt'
+    sesDataDir = tec_root + tec_run_name
+    SECTOR = sector_number
+    fluxVetOut = 'spoc_fluxtriage_' + run_name + '.txt'
 
     tcedata = tce_seed()
     all_tces = tcedata.fill_objlist_from_hd5f(tceSeedInFile)

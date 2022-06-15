@@ -26,6 +26,8 @@ from gather_tce_fromdvxml import tce_seed
 import scipy.stats as st
 from statsmodels import robust
 import argparse
+import tec_run_parameters as tecrp
+
 
 def make_data_dirs(prefix, sector, epic):
     secDir = 'S{0:02d}'.format(sector)
@@ -280,14 +282,24 @@ if __name__ == "__main__":
     # These are for parallel procoessing
     wID = int(args.w)
     nWrk = int(args.n)
+
+    # get run parameters
+    run_name            = tecrp.run_name
+    sector_number       = tecrp.sector_number
+    tec_root            = tecrp.tec_root
+    tec_run_name        = tecrp.tec_run_name
+    cadPerHr		= tecrp.cadPerHr
+
     # Load the h5 file that contains TCE seed information
     # The h5 file is created by gather_tce_fromdvxml.py
-    tceSeedInFile = 'sector48_20220601_tce.h5'
+    tceSeedInFile = run_name + '_tce.h5'
+
     #  Directory storing the resampled dv time series data
-    dvDataDir = '/nobackupp15/dacaldwe/git/tec/sector48'
+    dvDataDir = tec_root + tec_run_name
     # Directory of output hd5 files
     outputDir = dvDataDir
-    SECTOR = 48
+    SECTOR = sector_number
+
     # What fraction of data can be missing and still calculat ses_mes
     # In Sector 1 due to the 2 days of missing stuff it was 0.68
     # For multisector this does not need to be adjusted because
@@ -298,9 +310,9 @@ if __name__ == "__main__":
     overWrite = True
 
     # Skyline data excises loud cadecnes
-    skyline_file = 'skyline_data_sector48_20220601.txt'
+    skyline_file = 'skyline_data_' + run_name + '.txt'
     if os.path.isfile(skyline_file):
-        dataBlock = np.genfromtxt('skyline_data_sector48_20220601.txt', dtype=['f8'])
+        dataBlock = np.genfromtxt(skyline_file, dtype=['f8'])
         badTimes = dataBlock['f0']
         if len(badTimes) < 2:
             badTimes = np.array([0.0])
@@ -309,7 +321,7 @@ if __name__ == "__main__":
         badTimes = np.array([0.0])
 
     # Search and filter parameters
-    cadPerHr = 6
+    #cadPerHr = 6 # read in from tecrp
     firstFilterScaleFac = 10 # low frequency median filter will be
                             # firstFilterScaleFac*searchDurationHours medfilt window
 

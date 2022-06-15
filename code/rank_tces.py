@@ -15,6 +15,8 @@ import math
 import h5py
 import argparse
 import glob
+import tec_run_parameters as tecrp
+
 
 def make_data_dirs(prefix, sector, epic):
     secDir = 'S{0:02d}'.format(sector)
@@ -93,45 +95,75 @@ if __name__ == '__main__':
     # These are for parallel procoessing
     wID = int(args.w)
     nWrk = int(args.n)
-    
-    summaryFolder = '/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2630/sector-48/ftl-dv-reports'
-    summaryPrefix = 'hlsp_tess-spoc_tess_phot_-'
-    summaryPostfix = '_tess_v1_dvs-'
-    SECTOR1 = 48
-    SECTOR2 = 48
-    multiRun = False
-    if SECTOR2 - SECTOR1 > 0:
-        multiRun = True
+
+    # get run parameters
+    run_name            = tecrp.run_name
+    multi_sector_flag   = tecrp.multi_sector_flag
+    sector_number       = tecrp.sector_number
+    start_sector        = tecrp.start_sector
+    end_sector          = tecrp.end_sector
+    tec_root            = tecrp.tec_root
+    tec_run_name        = tecrp.tec_run_name
+    data_root_dir       = tecrp.data_root_dir
+    dv_reports_dir      = tecrp.dv_reports_dir
+    dv_file_prefix      = tecrp.dv_file_prefix
+    dv_file_postfix     = tecrp.dv_file_postfix
+    ftl_10min           = tecrp.ftl_10min
+    ftl_200sec          = tecrp.ftl_200sec
+    tgt_2min            = tecrp.tgt_2min
+
+
+    summaryFolder = data_root_dir + dv_reports_dir
+    summaryPrefix = dv_file_prefix
+    # Note: DV report file names differ between 2-min & FTL outputs
+    if tgt_2min:
+        summaryPostfix = dv_file_postfix + '_dvs.pdf'
+    elif ftl_10min:
+        summaryPostfix = dv_file_postfix + '_dvs-'
+    elif ftl_200sec:
+        summaryPostfix = dv_file_postfix + '_dvs-'
+    else:
+        raise Exception(__name__,': Error cadence type not properly defined')
+
+    #summaryPrefix = 'hlsp_tess-spoc_tess_phot_-'
+    #summaryPostfix = '_tess_v1_dvs-'
+    SECTOR1 = start_sector
+    SECTOR2 = end_sector
+    multiRun = multi_sector_flag
 
     doPNGs = False
-    pngFolder = '/nobackupp15/dacaldwe/git/tec/sector48/pngs/'
+    pngFolder = tec_root + tec_run_name + '/pngs/'
     doMergeSum = True
     if nWrk == 1:
         doMergeSum = False
-    pdfFolder = '/nobackupp15/dacaldwe/git/tec/sector48/pdfs/'
-    SECTOR1 = 48
-    SECTOR2 = 48
-    sesMesDir = '/nobackupp15/dacaldwe/git/tec/sector48'
-    SECTOR = 48# -1 for multi-sector
+    pdfFolder = tec_root + tec_run_name + '/pdfs/'
+    sesMesDir = tec_root + tec_run_name
+    
+    if multi_sector_flag:
+        SECTOR = -1
+    else:
+        SECTOR = sector_number
 
-    fileOut1 = 'spoc_ranking_Tier1_sector48_20220601.txt'
-    fileOut2 = 'spoc_ranking_Tier2_sector48_20220601.txt'
-    fileOut3 = 'spoc_ranking_Tier3_sector48_20220601.txt'
-    vetFile = 'spoc_fluxtriage_sector48_20220601.txt'
-    tceSeedInFile = 'sector48_20220601_tce.h5'
-    modshiftFile = 'spoc_modshift_sector48_20220601.txt'
-    modshiftFile2 = 'spoc_modshift_med_sector48_20220601.txt'
-    sweetFile = 'spoc_sweet_sector48_20220601.txt'
-    toiFederateFile = 'federate_toiWtce_sector48_20220601.txt'
-    knowPFederateFile = 'federate_knownP_sector48_20220601.txt'
-    selfMatchFile = 'selfMatch_sector48_20220601.txt'
-    modumpFile = 'spoc_modump_sector48_20220601.txt'
+    fileOut1 =           'spoc_ranking_Tier1_' + run_name + '.txt'
+    fileOut2 =           'spoc_ranking_Tier2_' + run_name + '.txt'
+    fileOut3 =           'spoc_ranking_Tier3_' + run_name + '.txt'
+    vetFile =            'spoc_fluxtriage_' + run_name + '.txt'
+    modshiftFile =       'spoc_modshift_' + run_name + '.txt'
+    modshiftFile2 =      'spoc_modshift_med_' + run_name + '.txt'
+    sweetFile =          'spoc_sweet_' + run_name + '.txt'
+    toiFederateFile =    'federate_toiWtce_' + run_name + '.txt'
+    knowPFederateFile =  'federate_knownP_' + run_name + '.txt'
+    selfMatchFile =      'selfMatch_' + run_name + '.txt'
+    modumpFile =         'spoc_modump_' + run_name + '.txt'
 
     # Load the tce data h5
-    tceSeedInFile = 'sector48_20220601_tce.h5'
+    tceSeedInFile = run_name + '_tce.h5'
     tcedata = tce_seed()
     all_tces = tcedata.fill_objlist_from_hd5f(tceSeedInFile)
     
+    # Define maximum good planet radius
+    maxPlanetRadiusRearth = 25.0
+
     # Define rank ramp limits
     rplims = [2.0, 6.0]
     meslims = [12.0, 9.0]
@@ -514,7 +546,7 @@ if __name__ == '__main__':
                     fc_str = fc_str + 'PDCsummaryPostfix_'
                     nFlags = nFlags + 1
             # Planet radius too big caution
-            if curRp > 20.0:
+            if curRp > maxPlanetRadiusRearth:
                 tier1 = False
                 fc[11] = 1
                 fc_str = fc_str +'RpBig_'
@@ -549,7 +581,10 @@ if __name__ == '__main__':
                     fout3.write('{} {} {}\n'.format(curstr[0:-1],hasSec,sweetFail))
                 reportIt = True
             if doPNGs and reportIt:
-                inputFile = os.path.join(summaryFolder,'{0}{1:016d}-s{2:04d}-s{3:04d}{4}{5:02d}.pdf'.format(summaryPrefix,alltic[j],SECTOR1,SECTOR2,summaryPostfix,allpn[j]))
+		if tgt_2min:
+                    inputFile = os.path.join(summaryFolder,'{0}s{1:04d}-s{2:04d}-{3:016d}-{4:02d}{5}'.format(summaryPrefix,SECTOR1,SECTOR2,alltic[j],allpn[j],summaryPostfix))
+		else: # FTL DV report file name format
+                    inputFile = os.path.join(summaryFolder,'{0}{1:016d}-s{2:04d}-s{3:04d}{4}{5:02d}.pdf'.format(summaryPrefix,alltic[j],SECTOR1,SECTOR2,summaryPostfix,allpn[j]))
                 outputFile = os.path.join(pngFolder,'{0:04d}-{1:016d}-{2:02d}.png'.format(i, alltic[j], allpn[j]))
                 comstring = 'gs -dBATCH -dNOPAuSE -sDEVICE=png16m -r300 -o {0} {1}'.format(outputFile, inputFile)
                 tmp = call(comstring, shell=True)
@@ -574,7 +609,11 @@ if __name__ == '__main__':
                 mrkOut.write('} if true}{pop false} ifelse} >> setpagedevice\n')
                 mrkOut.close()
                 
-                inputFile1 = os.path.join(summaryFolder,'{0}{1:016d}-s{2:04d}-s{3:04d}{4}{5:02d}.pdf'.format(summaryPrefix,alltic[j],SECTOR1,SECTOR2,summaryPostfix,allpn[j]))
+                if tgt_2min:
+                    inputFile1 = os.path.join(summaryFolder,'{0}s{1:04d}-s{2:04d}-{3:016d}-{4:02d}*dvs.pdf'.format(summaryPrefix,SECTOR1,SECTOR2,alltic[j],allpn[j],summaryPostfix))
+                else:  # FTL file format
+                    inputFile1 = os.path.join(summaryFolder,'{0}{1:016d}-s{2:04d}-s{3:04d}{4}{5:02d}.pdf'.format(summaryPrefix,alltic[j],SECTOR1,SECTOR2,summaryPostfix,allpn[j]))
+
                 inputFileList = glob.glob(inputFile1)
                 if not len(inputFileList) == 1:
                     print('Error: not found or multiple DV summaries found for {0:d} pn {1:d}'.format(alltic[j], allpn[j]))

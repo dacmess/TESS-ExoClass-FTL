@@ -12,6 +12,8 @@ from subprocess import call
 import glob
 from shutil import copyfile
 import argparse
+import tec_run_parameters as tecrp
+
 
 if __name__ == '__main__':
     # Parse the command line arguments for multiprocessing
@@ -31,20 +33,27 @@ if __name__ == '__main__':
     wID = int(args.w)
     nWrk = int(args.n)
 
-    ###### Edit the paths and SECTOR number below ######
-    sourceDir = '/nobackupp15/spocops/git/tec/sector48FTL/pdfs'
-    outDir = '/nobackupp15/spocops/git/tec/sector48FTL/tevpdfs'
-    #miniDir = '/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2522/sector-45/ftl-dv-reports'
-    miniDir = '/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2630/sector-48/ftl/target'
-    SECTOR = 48 
-    ###### End of edits, the rest should be ok for FTL ######
+    # get run parameters
+    multi_sector_flag   = tecrp.multi_sector_flag
+    sector_number       = tecrp.sector_number
+    tec_root            = tecrp.tec_root
+    tec_run_name        = tecrp.tec_run_name
+    data_root_dir       = tecrp.data_root_dir
+    dv_reports_dir      = tecrp.dv_reports_dir
+    dv_file_prefix      = tecrp.dv_file_prefix
+    dv_file_postfix     = tecrp.dv_file_postfix
 
-    miniHdr = 'hlsp_tess-spoc_tess_phot_'
-    miniTail = '_tess_v1_dvm.pdf'
+    sourceDir = tec_root + tec_run_name + '/pdfs'
+    outDir = tec_root + tec_run_name + '/tevpdfs'
+    #miniDir = '/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2522/sector-45/ftl-dv-reports'
+    miniDir = data_root_dir + dv_reports_dir 
+    SECTOR = sector_number 
+
+    miniHdr = dv_file_prefix
+    miniTail = '_dvm.pdf'  # generic enough to work with 2min & FTL outputs
     #miniTail = '-s0045-s0045_tess_v1_dvm.pdf'
-    multiSector = False
     
-    if multiSector:
+    if multi_sector_flag:
         useSector = 1000+SECTOR
     else:
         useSector = SECTOR

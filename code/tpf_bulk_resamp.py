@@ -16,6 +16,7 @@ import os
 import math
 from gather_tce_fromdvxml import tce_seed
 import cjb_utils as cjb
+import tec_run_parameters as tecrp
 
 
 def make_data_dirs(prefix, sector, epic):
@@ -154,13 +155,42 @@ def tpf_resamp(file, fileOut, RESAMP, lcFile):
 
 if __name__ == "__main__":
     
-    dirOutputs = '/nobackupp15/dacaldwe/git/tec/sector48/'
-    SECTOR = 48 # =-1 if multi-sector
-    RESAMP = 1  ###  USE AN ODD NUMBER HELPS WITH CADENCE NO ###
+    # get run parameters
+    run_name            = tecrp.run_name
+    multi_sector_flag   = tecrp.multi_sector_flag
+    sector_number	= tecrp.sector_number
+    tec_root		= tecrp.tec_root
+    tec_run_name	= tecrp.tec_run_name
+    data_root_dir       = tecrp.data_root_dir
+    target_pixel_dir	= tecrp.target_pixel_dir
+    lc_file_prefix	= tecrp.lc_file_prefix
+    lc_file_postfix	= tecrp.lc_file_postfix
+    ftl_10min           = tecrp.ftl_10min
+    ftl_200sec          = tecrp.ftl_200sec
+    tgt_2min            = tecrp.tgt_2min
+
+
+    dirOutputs = tec_root + tec_run_name +'/'
+    if multi_sector_flag:
+	SECTOR = -1
+    else:
+        SECTOR = sector_number 
+
+    #RESAMP = 1  ###  USE AN ODD NUMBER HELPS WITH CADENCE NO ###
+    if tgt_2min:
+        RESAMP = 5
+    elif ftl_10min:
+        RESAMP = 1
+    elif ftl_200sec:
+        RESAMP = 3
+    else:
+        raise Exception(__name__,': Error cadence type not properly defined')
+
     overwrite = False
 
     #  Directory list for Sector light curve files
     # Use this block for Multi-sector runs
+    ###### Not sure how to parameterize this for Multi-sector runs -DAC
     #fileInputPrefixList = ['/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2630/sector-001-20210219/ftl-target-pixel/tess2018206045859-s0001-', \
     #                      '/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2630/sector-002-20210219/ftl-target-pixel/tess2018234235059-s0002-', \
     #                      '/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2630/sector-003-20210219/ftl-target-pixel/tess2018263035959-s0003-', \
@@ -262,11 +292,13 @@ if __name__ == "__main__":
     fileInputPrefixList = []
     for i in np.arange(1,SECTOR):
         fileInputPrefixList.append('/foo{0:d}'.format(i))
-    fileInputPrefixList.append('/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2630/sector-48/ftl-target-pixel/hlsp_tess-spoc_tess_phot_')
+    fileInputPrefixList.append(data_root_dir + target_pixel_dir + '/' + lc_file_prefix)
+    #fileInputPrefixList.append('/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2630/sector-48/ftl-target-pixel/hlsp_tess-spoc_tess_phot_')
     fileInputSuffixList = []
     for i in np.arange(1,SECTOR):
         fileInputSuffixList.append('/foo{0:d}'.format(i))
-    fileInputSuffixList.append('-s0048_tess_v1_tp.fits.gz')
+    fileInputSuffixList.append(lc_file_postfix + '_tp.fits.gz')
+    #fileInputSuffixList.append('-s0048_tess_v1_tp.fits.gz')
 
     nSector = len(fileInputPrefixList)    
 
@@ -274,7 +306,7 @@ if __name__ == "__main__":
     #  You can specify a multisector tce seed file because
     #   al that it uses is TIC.  If it exists it is made
     # Load the tce data h5
-    tceSeedInFile = 'sector48_20220601_tce.h5'
+    tceSeedInFile = run_name + '_tce.h5'
     tcedata = tce_seed()
     all_tces = tcedata.fill_objlist_from_hd5f(tceSeedInFile)
 

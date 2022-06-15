@@ -7,6 +7,8 @@ import math
 import os
 from subprocess import Popen, PIPE
 import numpy as np
+import tec_run_parameters as tecrp
+
 
 def make_data_dirs(prefix, sector, epic):
     secDir = 'S{0:02d}'.format(sector)
@@ -27,12 +29,19 @@ def idx_filter(idx, *array_list):
 
 
 if __name__ == '__main__':
+
+    # get run parameters
+    run_name            = tecrp.run_name
+    sector_number       = tecrp.sector_number
+    tec_root            = tecrp.tec_root
+    tec_run_name        = tecrp.tec_run_name
+
     #  Directory storing the ses mes time series
-    sesMesDir = '/nobackupp15/dacaldwe/git/tec/sector48'
-    SECTOR = 48
+    sesMesDir = tec_root + tec_run_name
+    SECTOR = sector_number
 
     doPDFs = True
-    vetFile = 'spoc_fluxtriage_sector48_20220601.txt'
+    vetFile = 'spoc_fluxtriage_' + run_name + '.txt'
     overwrite = False
 
     # Load the  flux vetting

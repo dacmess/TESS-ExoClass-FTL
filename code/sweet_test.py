@@ -16,6 +16,8 @@ from statsmodels import robust
 from pgmcmc import pgmcmc_ioblk, pgmcmc_setup
 from pgmcmc import pgmcmc_run_mcmc, pgmcmc_run_minimizer
 import matplotlib.pyplot as plt
+import tec_run_parameters as tecrp
+
 
 def make_data_dirs(prefix, sector, epic):
     secDir = 'S{0:02d}'.format(sector)
@@ -200,6 +202,7 @@ def pgmcmc_prior(ioblk):
 
     # If variables are within bounds then proceed to calculate prior
     if (err == 0):
+	# uniform prior over interval a<=x<=b:  1/(b-a)
         priorvals = np.log(1.0 / (ioblk.physval_maxs - ioblk.physval_mins))
         prior = np.sum(priorvals)
         # Warn on nonfinite and nonreal prior 
@@ -214,20 +217,26 @@ def pgmcmc_prior(ioblk):
 
 
 if __name__ == '__main__':
+
+    # get run parameters
+    run_name            = tecrp.run_name
+    sector_number	= tecrp.sector_number
+    tec_root		= tecrp.tec_root
+    tec_run_name	= tecrp.tec_run_name
+
     # Maximum period for test
     MAXPER = 5.0
     
     #  Directory storing the ses mes time series
-    sesMesDir = '/nobackupp15/dacaldwe/git/tec/sector48'
-    SECTOR = 48
+    sesMesDir = tec_root + tec_run_name
+    SECTOR = sector_number
 
-    fileOut = 'spoc_sweet_sector48_20220601.txt'
+    fileOut = 'spoc_sweet_' + run_name + '.txt'
     fom = open(fileOut, 'w')
-    vetFile = 'spoc_fluxtriage_sector48_20220601.txt'
-    tceSeedInFile = 'sector48_20220601_tce.h5'
+    vetFile = 'spoc_fluxtriage_' + run_name + '.txt'
 
     # Load the tce data h5
-    tceSeedInFile = 'sector48_20220601_tce.h5'
+    tceSeedInFile = run_name + '_tce.h5'
     tcedata = tce_seed()
     all_tces = tcedata.fill_objlist_from_hd5f(tceSeedInFile)
     
@@ -262,7 +271,7 @@ if __name__ == '__main__':
         if len(idx) > 0:
             allvet[i] = fvvet[idx]
     # only keep tces with both valid dv and trapezoid fits
-    # and flux vetted pass and period < PERMAX
+    # and flux vetted pass and period < MAXPER
     idx = np.where((allatvalid == 1) & (alltrpvalid == 1) & (allsolarflux > 0.0) & \
                    (allvet == 1) & (allper<MAXPER))[0]
     alltic, allpn, allatvalid, allrp, allrstar, alllogg, allper, alltmags, \

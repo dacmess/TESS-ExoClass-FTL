@@ -13,7 +13,7 @@ import gzip
 import xml.etree.cElementTree as ET
 import copy
 import h5py
-
+import tec_run_parameters as tecrp
 
 
 class tce_seed(object):
@@ -196,8 +196,16 @@ class tce_seed(object):
         
         
 if __name__ == "__main__":
-    tceSeedOutFile = 'sector48_20220601_tce.h5'
-    headXMLPath = '/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2630/sector-48/ftl-dv-results/'
+    
+    # get run parameters
+    run_name 		= tecrp.run_name
+    data_root_dir	= tecrp.data_root_dir
+    dv_results_dir	= tecrp.dv_results_dir
+
+    tceSeedOutFile = run_name + '_tce.h5'
+    headXMLPath = data_root_dir + dv_results_dir + '/'
+    #headXMLPath = '/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2630/sector-48/ftl-dv-results/'
+
     # Namespace there is extra junk prepended to tags
     #  This is supposed to make it easier to use 
     ns = {'ns': 'http://www.nasa.gov/2018/TESS/DV'}

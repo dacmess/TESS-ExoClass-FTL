@@ -18,6 +18,8 @@ import h5py
 from statsmodels import robust
 import matplotlib.pyplot as plt
 from astropy.io import fits
+import tec_run_parameters as tecrp
+
 
 def make_data_dirs(prefix, sector, epic):
     secDir = 'S{0:02d}'.format(sector)
@@ -40,11 +42,38 @@ def idx_filter(idx, *array_list):
 
 if __name__ == '__main__':
     
-    dirOutputs = '/nobackupp15/dacaldwe/git/tec/sector48/'
-    RESAMP = 7  ###  USE AN ODD NUMBER ###
-    SECTOR = 48 # =-1 if multi-sector
+    # get run parameters
+    run_name            = tecrp.run_name
+    multi_sector_flag   = tecrp.multi_sector_flag
+    sector_number       = tecrp.sector_number
+    tec_root            = tecrp.tec_root
+    tec_run_name        = tecrp.tec_run_name
+    data_root_dir       = tecrp.data_root_dir
+    light_curve_dir	= tecrp.light_curve_dir
+    lc_file_prefix      = tecrp.lc_file_prefix
+    lc_file_postfix     = tecrp.lc_file_postfix
+    ftl_10min           = tecrp.ftl_10min
+    ftl_200sec          = tecrp.ftl_200sec
+    tgt_2min            = tecrp.tgt_2min
+
+    dirOutputs = tec_root + tec_run_name +'/'
+    if multi_sector_flag:
+        SECTOR = -1
+    else:
+        SECTOR = sector_number
+
+    # Resample centroid time series to ~ 30 min  ###  USE AN ODD NUMBER ###
+    if tgt_2min:
+        RESAMP = 31 
+    elif ftl_10min:
+        RESAMP = 7
+    elif ftl_200sec:
+        RESAMP = 18
+    else:
+        raise Exception(__name__,': Error cadence type not properly defined')
 
     
+    ### Not sure how to parameterize Multi-sector case -DAC 16 Jun 2022
     #  Directory list for Sector light curve files
     # This block is for the multi-sector case
 # In the case of a single sector One needs dummy entries for
@@ -150,22 +179,23 @@ if __name__ == '__main__':
     fileInputPrefixList = []
     for i in np.arange(1,SECTOR):
         fileInputPrefixList.append('/foo{0:d}'.format(i))
-    fileInputPrefixList.append('/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2630/sector-48/ftl-light-curve/hlsp_tess-spoc_tess_phot_')
+    fileInputPrefixList.append(data_root_dir + light_curve_dir + '/' + lc_file_prefix)
+    #fileInputPrefixList.append('/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2630/sector-48/ftl-light-curve/hlsp_tess-spoc_tess_phot_')
     fileInputSuffixList = []
     for i in np.arange(1,SECTOR):
         fileInputSuffixList.append('/foo{0:d}'.format(i))
-    fileInputSuffixList.append('-s0048_tess_v1_lc.fits.gz')
+    fileInputSuffixList.append(lc_file_postfix + '_lc.fits.gz')
+    #fileInputSuffixList.append('-s0048_tess_v1_lc.fits.gz')
 
     nSector = len(fileInputPrefixList)    
 
-    #fileOut = 'spoc_pdcstats_sector48_20220601.txt'
+    #fileOut = 'spoc_pdcstats_' + run_name + '.txt'
     #fom = open(fileOut, 'w')
-    vetFile = 'spoc_fluxtriage_sector48_20220601.txt'
+    vetFile = 'spoc_fluxtriage_' + run_name + '.txt'
     #vetFile = 'junk.txt'
-    tceSeedInFile = 'sector48_20220601_tce.h5'
 
     # Load the tce data h5
-    tceSeedInFile = 'sector48_20220601_tce.h5'
+    tceSeedInFile = run_name + '_tce.h5'
     tcedata = tce_seed()
     all_tces = tcedata.fill_objlist_from_hd5f(tceSeedInFile)
     

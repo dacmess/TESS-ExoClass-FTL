@@ -16,6 +16,8 @@ import h5py
 import glob
 import os
 import math
+import tec_run_parameters as tecrp
+
 
 def make_data_dirs(prefix, sector, epic):
     secDir = 'S{0:02d}'.format(sector)
@@ -195,9 +197,31 @@ def dvts_resamp(file, dirOut, RESAMP, SECTOR=None, overwrite=True):
 
 if __name__ == "__main__":
 
-    dirInputs = '/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2630/sector-48/ftl-dv-time-series/'
-    dirOutputs = '/nobackupp15/dacaldwe/git/tec/sector48/'
-    RESAMP = 1  ###  USE AN ODD NUMBER HELPS WITH CADENCE NO ###
+    # get run parameters
+    tec_root 		= tecrp.tec_root
+    tec_run_name	= tecrp.tec_run_name
+    data_root_dir       = tecrp.data_root_dir
+    dv_time_series_dir	= tecrp.dv_time_series_dir
+    ftl_10min		= tecrp.ftl_10min
+    ftl_200sec		= tecrp.ftl_200sec
+    tgt_2min		= tecrp.tgt_2min
+
+    dirInputs = data_root_dir + dv_time_series_dir + '/'
+    #dirInputs = '/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2630/sector-48/ftl-dv-time-series/'
+    dirOutputs = tec_root + tec_run_name + '/'
+    #dirOutputs = '/nobackupp15/dacaldwe/git/tec/sector48/'
+
+    # base resampling on cadence type, aim for ~10 minute resampling
+    if tgt_2min:
+        RESAMP = 5
+    elif ftl_10min:
+        RESAMP = 1
+    elif ftl_200sec:
+        RESAMP = 3
+    else:
+        raise Exception(__name__,': Error cadence type not properly defined')
+    #RESAMP = 1  ###  USE AN ODD NUMBER HELPS WITH CADENCE NO ###
+
     SECTOR_OVRRIDE = None # If NOT multisector set this to None ###
     overwrite = True # Set False to keep old results and only do files that dont exist
 
