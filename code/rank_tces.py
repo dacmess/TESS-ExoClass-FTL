@@ -129,7 +129,6 @@ if __name__ == '__main__':
     #summaryPostfix = '_tess_v1_dvs-'
     SECTOR1 = start_sector
     SECTOR2 = end_sector
-    multiRun = multi_sector_flag
 
     doPNGs = False
     pngFolder = tec_root + tec_run_name + '/pngs/'
@@ -634,7 +633,7 @@ if __name__ == '__main__':
                     inputFile3 = ''
     
                 inputFileList = []
-                if multiRun:
+                if multi_sector_flag:
                     for curSec in np.arange(SECTOR1,SECTOR2+1):
                         inputFile4 = os.path.join(make_data_dirs(sesMesDir, SECTOR, curTic), 'tess_diffImg_{0:016d}_{1:02d}_{2:02d}.pdf'.format(curTic,curPn,curSec))
                         if os.path.isfile(inputFile4):

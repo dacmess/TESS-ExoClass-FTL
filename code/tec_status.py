@@ -12,6 +12,8 @@ import os
 from subprocess import Popen, PIPE
 import math
 import glob
+import tec_run_parameters as tecrp
+
 
 def make_data_dirs(prefix, sector, epic):
     secDir = 'S{0:02d}'.format(sector)
@@ -27,26 +29,41 @@ def make_data_dirs(prefix, sector, epic):
 
 
 if __name__ == '__main__':
-    SECTOR1 = 48
-    SECTOR2 = 48
-    multiRun = False
-    if SECTOR2 - SECTOR1 > 0:
-        multiRun = True
-    tceSeedInFile = 'sector48_20220601_tce.h5'
-    sesMesDir = '/nobackupp15/dacaldwe/git/tec/sector48'
-    SECTOR = 48
-    skyline_out = 'skyline_data_sector48_20220601.txt'
-    fed_knownP_out = 'federate_knownP_sector48_20220601.txt'
-    fed_toi_out = 'federate_toiWtce_sector48_20220601.txt'
-    fed_self_out = 'selfMatch_sector48_20220601.txt'
-    fluxVetOut = 'spoc_fluxtriage_sector48_20220601.txt'
+
+    # get run parameters
+    run_name            = tecrp.run_name
+    multi_sector_flag   = tecrp.multi_sector_flag
+    sector_number       = tecrp.sector_number
+    start_sector        = tecrp.start_sector
+    end_sector          = tecrp.end_sector
+    tec_root            = tecrp.tec_root
+    tec_run_name        = tecrp.tec_run_name
+    data_root_dir       = tecrp.data_root_dir
+    dv_reports_dir      = tecrp.dv_reports_dir
+    dv_file_prefix      = tecrp.dv_file_prefix
+    dv_file_postfix     = tecrp.dv_file_postfix
+    ftl_10min           = tecrp.ftl_10min
+    ftl_200sec          = tecrp.ftl_200sec
+    tgt_2min            = tecrp.tgt_2min
+
+    SECTOR  = sector_number
+    SECTOR1 = start_sector
+    SECTOR2 = end_sector
+
+    tceSeedInFile = run_name + '_tce.h5'
+    sesMesDir = tec_root + tec_run_name
+    skyline_out = 'skyline_data_' + run_name + '.txt'
+    fed_knownP_out = 'federate_knownP_' + run_name + '.txt'
+    fed_toi_out = 'federate_toiWtce_' + run_name + '.txt'
+    fed_self_out = 'selfMatch_' + run_name + '.txt''
+    fluxVetOut = 'spoc_fluxtriage_' + run_name + '.txt''
     SWEETMAXPER = 5.0
-    sweet_out = 'spoc_sweet_sector48_20220601.txt'
-    modump_out = 'spoc_modump_sector48_20220601.txt'    
-    fileOut1 = 'spoc_ranking_Tier1_sector48_20220601.txt'
-    fileOut2 = 'spoc_ranking_Tier2_sector48_20220601.txt'
-    fileOut3 = 'spoc_ranking_Tier3_sector48_20220601.txt'
-    if multiRun:
+    sweet_out = 'spoc_sweet_' + run_name + '.txt''
+    modump_out = 'spoc_modump_' + run_name + '.txt''    
+    fileOut1 = 'spoc_ranking_Tier1_' + run_name + '.txt''
+    fileOut2 = 'spoc_ranking_Tier2_' + run_name + '.txt''
+    fileOut3 = 'spoc_ranking_Tier3_' + run_name + '.txt''
+    if multi_sector_flag:
         useSector = 1000+SECTOR2
     else:
         useSector = SECTOR2

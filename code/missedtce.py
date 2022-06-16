@@ -14,13 +14,20 @@ import sys
 import time
 import json
 import cjb_utils as cjb
-
-
+import tec_run_parameters as tecrp
 
 
 if __name__ == '__main__':
     
+    # get run parameters
+    run_name            = tecrp.run_name
+    run_date            = tecrp.run_date
+
     # load the TEV TCE  data
+
+    # Assumes the TOI catalog filename is like: csv-file-toi-catalog-FIXED-20220601.csv
+    # NOTE: code not compatible with 2022 era FIXED csv files
+    #qlpfile = 'csv-file-toi-catalog-FIXED-' + run_date + '.csv'
 
     qlpfile = 'csv-file-2019-05-07.csv'
     dtypeseq = ['i4','i4','U30','U30','U30','U30']
@@ -30,7 +37,7 @@ if __name__ == '__main__':
     gtPN = dataBlock['f1']
 
     # Load the tce data pickle    
-    tceSeedInFile = 'sector48_20220601_tce.pkl'
+    tceSeedInFile = run_name + '_tce.pkl'
     fin = open(tceSeedInFile, 'rb')
     all_tces = pickle.load(fin)
     fin.close()
@@ -72,7 +79,7 @@ if __name__ == '__main__':
     uniqTic = np.unique(alltic)
     print('Total Targets {0:d}'.format(len(uniqTic)))
     
-    vetFile = 'spoc_fluxtriage_sector48_20220601.txt'
+    vetFile = 'spoc_fluxtriage_' + run_name + '.txt'
     # Load the  flux vetting
     dataBlock = np.genfromtxt(vetFile, dtype=[int,int,int,'S1'])
     fvtic = dataBlock['f0']
