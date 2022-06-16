@@ -144,7 +144,7 @@ if __name__ == '__main__':
 
     fout = open('selfMatch_' + run_name + '.txt', 'w')
 
-    if mult_sector_flag:
+    if multi_sector_flag:
         dataSpan = 27.0  # adjust this as needed; used for defining range of ok epochs
     else:
         dataSpan = 27.0

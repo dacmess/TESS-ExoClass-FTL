@@ -142,7 +142,7 @@ if __name__ == '__main__':
     multi_sector_flag   = tecrp.multi_sector_flag
 
     fout = open('federate_toiWtce_' + run_name + '.txt', 'w')
-    if mult_sector_flag:
+    if multi_sector_flag:
         dataSpan = 27.0  # adjust this as needed; used for defining range of ok epochs
     else:
         dataSpan = 27.0
