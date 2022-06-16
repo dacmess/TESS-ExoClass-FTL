@@ -55,14 +55,14 @@ if __name__ == '__main__':
     skyline_out = 'skyline_data_' + run_name + '.txt'
     fed_knownP_out = 'federate_knownP_' + run_name + '.txt'
     fed_toi_out = 'federate_toiWtce_' + run_name + '.txt'
-    fed_self_out = 'selfMatch_' + run_name + '.txt''
-    fluxVetOut = 'spoc_fluxtriage_' + run_name + '.txt''
+    fed_self_out = 'selfMatch_' + run_name + '.txt'
+    fluxVetOut = 'spoc_fluxtriage_' + run_name + '.txt'
     SWEETMAXPER = 5.0
-    sweet_out = 'spoc_sweet_' + run_name + '.txt''
-    modump_out = 'spoc_modump_' + run_name + '.txt''    
-    fileOut1 = 'spoc_ranking_Tier1_' + run_name + '.txt''
-    fileOut2 = 'spoc_ranking_Tier2_' + run_name + '.txt''
-    fileOut3 = 'spoc_ranking_Tier3_' + run_name + '.txt''
+    sweet_out = 'spoc_sweet_' + run_name + '.txt'
+    modump_out = 'spoc_modump_' + run_name + '.txt'    
+    fileOut1 = 'spoc_ranking_Tier1_' + run_name + '.txt'
+    fileOut2 = 'spoc_ranking_Tier2_' + run_name + '.txt'
+    fileOut3 = 'spoc_ranking_Tier3_' + run_name + '.txt'
     if multi_sector_flag:
         useSector = 1000+SECTOR2
     else:
