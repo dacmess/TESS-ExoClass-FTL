@@ -10,7 +10,6 @@
 # Mods from: Douglas Caldwell based on initial TEC code by Christopher Burke
 # 15 June 2022 - initial use, working for FTL, 2-min single sector
 # 
-# test file for setting run parameters using an imported file
 
 ## Sector and Run parameters
 ######## changes here ########
@@ -22,7 +21,7 @@ run_name 	= sector_name + '_' + run_date
 
 ## Single-sector vs multi-sector parameters
 ######## changes here ########
-start_sector 	= 51
+start_sector 	= 51		# for single-sector run start_sector=end_sector
 end_sector 	= 51
 multi_sector_flag = False # use for sector_number in multi-sector run
 # sector_number	= multi_sector_flag

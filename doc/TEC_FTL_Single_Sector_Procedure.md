@@ -16,7 +16,8 @@ running things in parallel and keeping track of intermedidiate results.
 
 TEC runs with the conda environment **tec-env** tools (with one optional exception).
 
-The following python modules used by TEC are available in the tec-env environment: numpy, matplotlib, scipy, astropy, h5py, statsmodels, spectrum
+The following python modules used by TEC are available in the tec-env environment: numpy, matplotlib, scipy, astropy, h5py, statsmodels, spectrum,
+jupyter-lab
 
 The following system commands should be available on you local machine: c++ compiler (g++), pdftotext, grep, gs, seq, parallel
 
@@ -28,7 +29,9 @@ A compiled version of modshift is located in /nobackupp15/spocops/git/tec/modshi
 
         $ g++ -std=c++11 -Wno-unused-result -O3 -o modshift -O modshift.cpp
 
-In modshift_test.py *near* Line 536 the syscall variable needs to point to the compiled modshift (as described  below in Step 12).
+The compiled modshift file should be in your tec\_root directorty: e.g., /nobackupp15/$USER/git/tec, as this is where the python wrapper modshift\_test.py will look for it.
+
+{:: comment} In modshift_test.py *near* Line 536 the syscall variable needs to point to the compiled modshift (as described  below in Step 12). {:/ comment}
 
 I created git/tec/tec_startup to add the definitions below. Before running tec step 10 you should source this file: 
 
@@ -40,13 +43,13 @@ Note: sedcsvfix is used in step 10 to remove commas in the comment section from 
 > 
 >        ### TEC
 >        alias sedcsvfix="sed -e 's/\"\"//g' -e 's/,\"[^\"]*/,\"NOCOMMENT/g'"
->    
+>
 >        function teccd { cd $NFS/git/tec/sector"$1"/TESS-ExoClass-FTL/code; }
 >
 >        export -f teccd
->    
+>
 >        ### TEC items
->    
+>
 >The alias is used to remove commas in the TEV output TOI listing .csv and the function is used to quickly change to the working code directory of a sector. For instance ‘teccd 48FTL’ will change to the TEC code route in sector48FTL. Alter the path for where you are running TEC.
 
 
@@ -56,7 +59,7 @@ If running as spocops user, run TEC on /nobackupp15/git/tec. Setup the directori
 
     $ cd /nobackupp15/spocops/git/tec/ 
         
-    $ mkdir sector##FTL  
+    $ mkdir sector##FTL
     
     $ cd sector##FTL
     
@@ -74,17 +77,19 @@ Clone from github the TEC codebase
     
 This is the main working directory for all TEC commands and all of the subsequent commands are run from within this code directory.
 
-Edit showfilenumbers.sh such that the DATA_DIR variable points to the spoc data directory for the sector you are working on. Note: This is where the DV results, LC & TP files live. On draco this is: /nobackupp15/spocops/exports/science-products-tsop-####. 
+Collect the data path and file name information for the data you will be processing through TEC. Run-specific information is entered in the file **tec\_run\_parameters.py**. Edit this file to set the sector number, local path information, path to the data export products, and sector specific information for the export file names. 
 
-To edit this file you will need the name of the export directory, including the Sector-NN directory. For example, the changes for Sector 40 FTL look like:
+Note: on draco, the DV results, light curve (LC) & target pixel (TP) files live in: /nobackupp15/spocops/exports/science-products-tsop-####. File names can be checked by looking in the data sub-directories (e.g., ftl-light-curve, ftl-target-pixel, ftl-dv-results,...).
 
-> DATA_DIR='/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2369/sector-40'
+For example, changes for Sector 40 FTL look like:
 
-Run the showfilenumbers.sh bash script
-
-    $ ./showfilenumbers.sh
-    
-It will show the filenames for the current sector. You will need these filename prefixes in the next step.
+> sector_number = 40
+> tec\_run\_name = 'sector40FTL'
+> data\_root\_dir='/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2369/sector-40'
+> lc\_file\_prefix = 'hlsp\_tess-spoc\_tess\_phot\_'
+> lc\_file\_postfix = '-s0040\_tess\_v1'
+> dv\_file\_prefix = 'hlsp\_tess-spoc\_tess\_phot\_'
+> dv\_file\_postfix = '-s0040-s0040_tess_v1'
 
 Edit **update_filenames.sh** - There are a series of OLD and NEW variables that need to be updated. This bash script will update all the python codes such that paths and variables get set for the current directory. Copy the NEW variables to the OLD and then replace the NEW variables with values appropriate for the current sector.
 

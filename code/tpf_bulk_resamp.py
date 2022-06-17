@@ -172,7 +172,7 @@ if __name__ == "__main__":
 
     dirOutputs = tec_root + tec_run_name +'/'
     if multi_sector_flag:
-	SECTOR = -1
+        SECTOR = -1
     else:
         SECTOR = sector_number 
 
