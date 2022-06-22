@@ -580,9 +580,9 @@ if __name__ == '__main__':
                     fout3.write('{} {} {}\n'.format(curstr[0:-1],hasSec,sweetFail))
                 reportIt = True
             if doPNGs and reportIt:
-		if tgt_2min:
+                if tgt_2min:
                     inputFile = os.path.join(summaryFolder,'{0}s{1:04d}-s{2:04d}-{3:016d}-{4:02d}{5}'.format(summaryPrefix,SECTOR1,SECTOR2,alltic[j],allpn[j],summaryPostfix))
-		else: # FTL DV report file name format
+                else: # FTL DV report file name format
                     inputFile = os.path.join(summaryFolder,'{0}{1:016d}-s{2:04d}-s{3:04d}{4}{5:02d}.pdf'.format(summaryPrefix,alltic[j],SECTOR1,SECTOR2,summaryPostfix,allpn[j]))
                 outputFile = os.path.join(pngFolder,'{0:04d}-{1:016d}-{2:02d}.png'.format(i, alltic[j], allpn[j]))
                 comstring = 'gs -dBATCH -dNOPAuSE -sDEVICE=png16m -r300 -o {0} {1}'.format(outputFile, inputFile)
