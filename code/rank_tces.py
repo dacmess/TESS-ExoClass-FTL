@@ -612,7 +612,7 @@ if __name__ == '__main__':
                 if tgt_2min:
                     inputFile1 = os.path.join(summaryFolder,'{0}s{1:04d}-s{2:04d}-{3:016d}-{4:02d}*dvs.pdf'.format(summaryPrefix,SECTOR1,SECTOR2,alltic[j],allpn[j],summaryPostfix))
                 else:  # FTL file format
-                    inputFile = os.path.join(summaryFolder,'{0}{1:016d}-{2}{3:02d}.pdf'.format(summaryPrefix,alltic[j],summaryPostfix,allpn[j]))
+                    inputFile1 = os.path.join(summaryFolder,'{0}{1:016d}-{2}{3:02d}.pdf'.format(summaryPrefix,alltic[j],summaryPostfix,allpn[j]))
                     #inputFile1 = os.path.join(summaryFolder,'{0}{1:016d}-s{2:04d}-s{3:04d}{4}{5:02d}.pdf'.format(summaryPrefix,alltic[j],SECTOR1,SECTOR2,summaryPostfix,allpn[j]))
 
                 inputFileList = glob.glob(inputFile1)
