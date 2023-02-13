@@ -3,7 +3,7 @@
 
 ## A. Environment Setup
 Use your normal means of connecting to draco (e.g., vnc) and open terminal windows. Generally, 2 or 3 terminals is sufficient for 
-running things in parallel and keeping track of intermedidiate results.
+running things in parallel and keeping track of intermediate results.
 *If you are running as SPOCOPS user you will need to login as spocops and do the python setup below on each of these terminals*
 
 > When running as spocops user, change python-conda source path by sourcing 
@@ -30,7 +30,7 @@ A compiled version of modshift is located in /nobackupp15/spocops/git/tec/modshi
 
         $ g++ -std=c++11 -Wno-unused-result -O3 -o modshift -O modshift.cpp
 
-The compiled modshift file should be in your tec\_root directorty: e.g., /nobackupp15/$USER/git/tec, as this is where the python wrapper modshift\_test.py will look for it.
+The compiled modshift file should be in your tec\_root directory: e.g., /nobackupp15/$USER/git/tec, as this is where the python wrapper modshift\_test.py will look for it.
 
 I created git/tec/tec_startup to add the definitions below. Before running tec step 10 you should source this file: 
 
