@@ -62,13 +62,13 @@ if __name__ == '__main__':
     else:
         SECTOR = sector_number
 
-    # Resample centroid time series to ~ 30 min  ###  USE AN ODD NUMBER ###
+    # Resample centroid time series to ~ 60 min  ###  USE AN ODD NUMBER ###
     if tgt_2min:
         RESAMP = 31 
     elif ftl_10min:
         RESAMP = 7
     elif ftl_200sec:
-        RESAMP = 18
+        RESAMP = 19
     else:
         raise Exception(__name__,': Error cadence type not properly defined')
 
