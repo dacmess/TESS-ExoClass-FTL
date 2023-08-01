@@ -163,6 +163,21 @@ if __name__ == '__main__':
     # Define maximum good planet radius
     maxPlanetRadiusRearth = 25.0
 
+    ### Define test thresholds
+    # Odd-Even test
+    OEThreshDefault = 2.8
+    OEThreshHighSNR = 4.0
+    highSNROE = 30.0 # for high-SNR targets used stricter Odd-Even thresh
+
+    # PDC Noise metric
+    minPDCNoiseMetric = 0.8
+
+    # Sweet test on Std-dev ratio
+    minSweetResidRatio = 0.8
+
+    # Momentum dump corresponding with transits
+    maxMomentumDumpFraction = 0.9
+
     # Define rank ramp limits
     rplims = [2.0, 6.0]
     meslims = [12.0, 9.0]
@@ -509,9 +524,9 @@ if __name__ == '__main__':
                     fc[13] = 1
                     fc_str = fc_str + 'HasSecDVPlanet?_'
                     #nFlags = nFlags + 1 #  not flag
-            OEThresh = 2.8
-            if curSNR > 30.0:
-                OEThresh = 4.0
+            OEThresh = OEThreshDefault
+            if curSNR > highSNROE:
+                OEThresh = OEThreshHighSNR 
             if modOESig[kidx] > OEThresh:
                 tier1 = False
                 fc[6] = 1
@@ -525,7 +540,7 @@ if __name__ == '__main__':
             sweetFail = False
             if len(kswidx)>0:
                 # Look for sweet test results
-                if swResidRatio[kswidx] < 0.8:
+                if swResidRatio[kswidx] < minSweetResidRatio:
                     tier1 = False
                     fc[8] = 1
                     sweetFail = True
@@ -539,7 +554,8 @@ if __name__ == '__main__':
                 nFlags = nFlags + 1
             # PDC goodness stat
             if len(kpdcidx)>0:
-                if pdcNoi[kpdcidx] < 0.8:# and pdcCor[kpdcidx] <:
+                if pdcNoi[kpdcidx] < minPDCNoiseMetric:# and pdcCor[kpdcidx] <:
+                    # Note: not currently checking correlation metric
                     tier1 = False
                     fc[10] = 1
                     fc_str = fc_str + 'PDCsummaryPostfix_'
@@ -552,7 +568,7 @@ if __name__ == '__main__':
                 nFlags = nFlags + 1
             # Momentum dump on events caution
             if len(kmdidx)>0:
-                if mdFrac[kmdidx] > 0.9:
+                if mdFrac[kmdidx] > maxMomentumDumpFraction:
                     tier1 = False
                     fc[12] = 1
                     fc_str = fc_str + 'MoDump_'
