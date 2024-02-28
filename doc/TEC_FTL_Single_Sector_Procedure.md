@@ -77,7 +77,7 @@ For example, changes for Sector 40 FTL look like:
 
     sector_number = 40
     tec\_run\_name = 'sector40FTL'
-    data\_root\_dir='/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2369/sector-40'
+    data\_root\_dir='/nobackupp15/spocops/incoming-outgoing/exports/science-products-tsop-2369/sector-40/'
     lc\_file\_prefix = 'hlsp\_tess-spoc\_tess\_phot\_'
     lc\_file\_postfix = '-s0040\_tess\_v1'
     dv\_file\_prefix = 'hlsp\_tess-spoc\_tess\_phot\_'
