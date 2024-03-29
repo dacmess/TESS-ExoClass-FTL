@@ -457,7 +457,7 @@ if __name__ == '__main__':
                 ib = np.where((alltic[j] == kpFedTic))[0]
                 if len(ib)>0:
                     matchFlg = 4
-            curstr = '{0:d} {1:d} {2:f} {3:d}\n'.format(alltic[j], allpn[j], totrank[j], matchFlg)
+            curstr = '{0:016d} {1:d} {2:f} {3:d}\n'.format(alltic[j], allpn[j], totrank[j], matchFlg)
             print(curstr)
     
             # Find modshift data to place in tier
